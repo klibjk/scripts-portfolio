@@ -886,45 +886,43 @@ fi
 echo "--------------------------------------------------"
 echo "Fetch Complete."
 echo "--------------------------------------------------"`,
-      readme: `# Public IP Address Fetcher Script
+      readme: `# Interacting with a REST API Script - Bash Version
 
-Script that fetches the public IP address using an external REST API and parses JSON response to display network information.
+This Bash script fetches the public IP address and associated geolocation information for the system it's run on by querying the ipinfo.io public REST API. It demonstrates making an HTTP GET request, handling the JSON response, and extracting specific data fields using jq.
 
 ## Purpose
-This script demonstrates how to interact with REST APIs using curl and parse JSON responses. It fetches public IP information and displays location details.
+This script demonstrates how to make a request to a public REST API to retrieve information (in this case, the system's public IP address and related geolocation data) and parse the JSON response. This is a common requirement for integrating with various web services and cloud platforms.
 
-## Compatibility
-- Linux (All distributions)
+## Operating System Compatibility
+- Linux
 - macOS
-- Windows (with WSL or Git Bash)
 
 ## Prerequisites
-- curl command-line tool
-- jq for JSON parsing (recommended)
-- Internet connectivity
+- curl: A command-line tool for transferring data with URLs. Usually pre-installed
+- jq: A lightweight and flexible command-line JSON processor
+  - May need to be installed (e.g., sudo apt install jq on Debian/Ubuntu, sudo yum install jq on RHEL/CentOS, brew install jq on macOS)
+  - The script includes a basic fallback to grep for extracting the IP if jq is not found, but jq provides more robust JSON parsing
 
 ## Usage
-1. Save as public_ip_fetcher.sh
-2. Make executable: chmod +x public_ip_fetcher.sh
-3. Run: ./public_ip_fetcher.sh
+1. Save the script to a file (e.g., get_public_ip.sh)
+2. Make the script executable: chmod +x get_public_ip.sh
+3. Run the script: ./get_public_ip.sh
 
-## Features
-- Uses ipinfo.io REST API for IP geolocation
-- JSON parsing with jq
-- Fallback parsing method using grep if jq is unavailable
-- Error handling for network failures
-- Displays IP, city, region, country, and organization
+## Output
+The script outputs:
+- A message indicating it's fetching the IP
+- If successful and jq is available:
+  - Public IP Address
+  - Location (City, Region, Country)
+  - Organization (ISP)
+- If jq is not available, it attempts to show the raw response and a fallback IP extraction
+- Error messages if curl fails or if the IP cannot be parsed
 
-## Dependencies
-- curl (usually pre-installed)
-- jq (optional but recommended): sudo apt install jq or brew install jq
-
-## API Information
-Uses the free ipinfo.io API which provides:
-- Public IP address
-- Geographic location
-- ISP/Organization information
-- No authentication required for basic usage`,
+## Notes
+- This script relies on a third-party API (ipinfo.io). Its availability and response format are subject to the API provider's terms
+- Rate limits may apply to public APIs; for frequent use, consider using an API key if offered or choosing an API designed for high-volume requests
+- Error handling for network issues or unexpected API responses is basic. More robust scripts might include retries or more detailed error parsing
+- This example can be adapted to interact with any REST API that returns JSON, by changing the API_URL and the jq filter expressions`,
       author: "David Povis",
       version: "1.0.0",
       compatibleOS: "Linux (All distributions), macOS, Windows (WSL)",
@@ -986,50 +984,47 @@ catch {
 Write-Host "--------------------------------------------------"
 Write-Host "Fetch Complete."
 Write-Host "--------------------------------------------------"`,
-      readme: `# Public IP Address Fetcher Script - PowerShell Version
+      readme: `# Interacting with a REST API Script - PowerShell Version
 
-PowerShell script that fetches the public IP address and detailed geolocation information using an external REST API.
+This PowerShell script retrieves the public IP address and associated geolocation information for the system by making a GET request to the ipinfo.io public REST API. It showcases PowerShell's native capability (Invoke-RestMethod) to interact with web services and automatically parse JSON responses into objects.
 
 ## Purpose
-This script demonstrates how to interact with REST APIs using PowerShell's built-in Invoke-RestMethod cmdlet. It fetches comprehensive public IP information including geolocation data.
+This script demonstrates how to make a request to a public REST API to retrieve information (in this case, the system's public IP address and related geolocation data) and parse the JSON response. This is a common requirement for integrating with various web services and cloud platforms.
 
-## Compatibility
-- Windows 10, Windows 11
-- Windows Server 2016, 2019, 2022
-- PowerShell 5.1 or later
-- PowerShell Core (cross-platform)
+## Operating System Compatibility
+- Windows 7/Windows Server 2008 R2 and later (with PowerShell 3.0 or higher for Invoke-RestMethod)
+- PowerShell Core (6.x and 7.x) on Windows, Linux, and macOS
 
 ## Prerequisites
-- PowerShell 5.1 or higher
-- Internet connectivity
-- No additional modules required (uses built-in cmdlets)
+- PowerShell 3.0 or higher. (Invoke-RestMethod is a core cmdlet)
+- Internet connectivity to reach the API endpoint
 
 ## Usage
-1. Save as Public-IP-Fetcher.ps1
+1. Save the script to a file (e.g., Get-PublicIP.ps1)
 2. Open PowerShell
-3. Run: .\\Public-IP-Fetcher.ps1
+3. Navigate to the directory where you saved the script
+4. Run the script: .\\Get-PublicIP.ps1
+5. If script execution is disabled, you may need to adjust the execution policy (e.g., Set-ExecutionPolicy RemoteSigned -Scope Process for the current session)
 
-## Features
-- Uses Invoke-RestMethod for automatic JSON parsing
-- Comprehensive error handling with detailed error messages
-- Displays extensive geolocation information
-- No external dependencies required
+## Output
+The script outputs:
+- A message indicating it's fetching the IP
+- If successful:
+  - Public IP Address
+  - Hostname (if provided by API)
+  - City, Region, Country
+  - Location (Latitude, Longitude)
+  - Organization (ISP)
+  - Postal Code
+  - Timezone
+- Error messages if the API request fails or if the response cannot be properly interpreted
 
-## Information Displayed
-- Public IP address
-- Hostname (when available)
-- City, region, and country
-- Geographic coordinates
-- ISP/Organization
-- Postal code
-- Timezone information
-
-## API Information
-Uses the free ipinfo.io API which provides:
-- Comprehensive IP geolocation data
-- No authentication required for basic usage
-- Automatic JSON response parsing in PowerShell
-- Reliable uptime and performance`,
+## Notes
+- The script leverages Invoke-RestMethod, which simplifies API interaction by handling JSON deserialization automatically
+- It relies on the ipinfo.io public API. For production or high-volume use, check the API's terms of service and consider API key usage if available
+- The -UseBasicParsing switch is included for broader compatibility, though often not strictly necessary with modern PowerShell versions for simple GET requests
+- Error handling includes catching exceptions from Invoke-RestMethod and displaying relevant HTTP status codes if available
+- This script can be easily adapted to query other RESTful APIs by changing the $ApiUrl and accessing different properties of the $Response object`,
       author: "David Povis",
       version: "1.0.0",
       compatibleOS: "Windows 10, Windows 11, Windows Server 2016+, PowerShell Core",

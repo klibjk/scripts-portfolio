@@ -78,16 +78,16 @@ export function ScriptCard({ script }: ScriptCardProps) {
         <div className="mt-4 pt-4 border-t border-gray-200 dark:border-dark-600 flex justify-between items-center">
           <Link 
             href={`/scripts/${script.key}`}
-            className={`inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white ${
+            className={`inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm ${
               isWindows 
-                ? "bg-primary-600 hover:bg-primary-700 focus:ring-primary-500" 
-                : "bg-secondary-600 hover:bg-secondary-700 focus:ring-secondary-500"
+                ? "bg-primary-600 hover:bg-primary-700 focus:ring-primary-500 text-primary-50 dark:text-white" 
+                : "bg-secondary-600 hover:bg-secondary-700 focus:ring-secondary-500 text-secondary-50 dark:text-white"
             } focus:outline-none focus:ring-2 focus:ring-offset-2`}
           >
             View Script
           </Link>
           <button 
-            className="p-1.5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 rounded-md" 
+            className="p-1.5 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-300 rounded-md" 
             title="Copy script link"
             onClick={copyLink}
             aria-label="Copy script link"

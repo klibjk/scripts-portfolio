@@ -82,39 +82,39 @@
     background-color: var(--bash-bg);
   }
   
-  /* Dark mode is temporarily same as light mode */
+  /* Dark mode with proper contrast */
   .dark {
-    --text-color: #000000;
-    --bg-color: #ffffff; 
-    --border-color: #999999;
-    --muted-bg: #f0f0f0;
-    --primary-bg: #0056b3;
-    --secondary-bg: #6c757d;
-    --accent-bg: #f8f9fa;
-    --powerscript-bg: #bbd6ff;
-    --bash-bg: #e3c8ff;
-    --button-bg: #e0e0e0;
-    --link-color: #0056b3;
+    --text-color: #ffffff;
+    --bg-color: #121212; 
+    --border-color: #444444;
+    --muted-bg: #2a2a2a;
+    --primary-bg: #0077cc;
+    --secondary-bg: #444444;
+    --accent-bg: #333333;
+    --powerscript-bg: #1a3d75;
+    --bash-bg: #4b2d6b;
+    --button-bg: #333333;
+    --link-color: #67b7ff;
     
-    --background: 0 0% 100%;
-    --foreground: 0 0% 0%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 0%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 0%;
-    --primary: 210 100% 35%;
-    --primary-foreground: 0 0% 0%;
-    --secondary: 210 17% 98%;
-    --secondary-foreground: 0 0% 0%;
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 0%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 0 0% 0%;
+    --background: 0 0% 7%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 9%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 9%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 210 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 20%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 100%;
+    --accent: 0 0% 20%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 0%;
-    --border: 0 0% 60%;
-    --input: 0 0% 60%;
-    --ring: 0 0% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 27%;
+    --input: 0 0% 27%;
+    --ring: 0 0% 27%;
   }
 }
 

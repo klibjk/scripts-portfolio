@@ -27,7 +27,7 @@ export function Navbar() {
           <div className="flex items-center">
             <Link href="/" className="flex-shrink-0 flex items-center">
               <FaTerminal className="text-primary-600 text-2xl mr-2" />
-              <span className="font-bold text-lg text-gray-900 dark:text-white">Script Portfolio</span>
+              <span className="font-bold text-lg text-gray-900 dark:text-slate-100">Script Portfolio</span>
             </Link>
             
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">

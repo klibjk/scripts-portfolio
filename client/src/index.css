@@ -2,9 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Apply dark mode to entire document */
-html.dark {
-  background-color: #121212;
+@layer base {
+  /* Default light mode colors */
+  :root {
+    --bg-primary: 0 0% 100%;
+    --bg-secondary: 210 17% 98%;
+    --text-primary: 0 0% 9%;
+    --text-secondary: 0 0% 45%;
+    --border-color: 220 13% 91%;
+  }
+
+  /* Dark mode colors */
+  .dark:root {
+    --bg-primary: 222 47% 11%;
+    --bg-secondary: 223 47% 14%;
+    --text-primary: 0 0% 100%;
+    --text-secondary: 0 0% 80%;
+    --border-color: 222 47% 25%;
+  }
+
+  /* Apply global styles */
+  html, body {
+    @apply bg-[hsl(var(--bg-primary))] text-[hsl(var(--text-primary))];
+    min-height: 100%;
+  }
 }
 
 /* Properly structured CSS with high-specificity selectors */

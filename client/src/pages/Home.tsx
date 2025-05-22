@@ -89,7 +89,7 @@ export default function Home() {
     <div id="script-gallery" className="mb-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Script Gallery</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Script Gallery</h1>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
             Browse PowerShell and Bash automation scripts for system engineering
           </p>
@@ -108,7 +108,7 @@ export default function Home() {
           <svg className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">No scripts found</h3>
+          <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">No scripts found</h3>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
             Try adjusting your search or filter to find what you're looking for.
           </p>

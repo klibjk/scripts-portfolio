@@ -10,16 +10,19 @@ export async function seedDatabase(): Promise<void> {
     // Get all scripts
     const existingScripts = await storage.getAllScripts();
     
-    // Check if we already have scripts
-    if (existingScripts.length > 0) {
-      console.log(`Database already has ${existingScripts.length} scripts, skipping seed.`);
+    // Check for new scripts to add
+    const existingKeys = existingScripts.map(script => script.key);
+    const newScripts = seedScripts.filter(script => !existingKeys.includes(script.script.key));
+    
+    if (newScripts.length === 0) {
+      console.log(`Database already has all ${existingScripts.length} scripts, nothing to add.`);
       return;
     }
     
-    console.log("Seeding database with initial scripts...");
+    console.log(`Found ${newScripts.length} new scripts to add to database...`);
     
-    // Add seed scripts
-    for (const seedData of seedScripts) {
+    // Only add new scripts
+    for (const seedData of newScripts) {
       await storage.createScript(
         seedData.script,
         seedData.tags,
@@ -28,9 +31,10 @@ export async function seedDatabase(): Promise<void> {
       );
       
       console.log(`Added script: ${seedData.script.title}`);
+      await logAgentAction("Created script", `Created script: ${seedData.script.title} (${seedData.script.key})`);
     }
     
-    await logAgentAction("Database Seed", `Seeded database with ${seedScripts.length} initial scripts`);
+    await logAgentAction("Database Seed", `Added ${newScripts.length} new scripts to database`);
     
     console.log("Database seeding complete!");
   } catch (error) {

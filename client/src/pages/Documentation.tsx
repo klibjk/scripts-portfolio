@@ -30,8 +30,8 @@ export default function Documentation() {
               reliability in production environments.
             </p>
             <p>
-              This tool was created to showcase scripting skills relevant to the NinjaOne "Systems 
-              Engineer – Product Scripting" role, demonstrating expertise in Windows and Linux 
+              This tool was created to showcase scripting skills relevant to Systems 
+              Engineering roles, demonstrating expertise in Windows and Linux 
               automation.
             </p>
           </div>

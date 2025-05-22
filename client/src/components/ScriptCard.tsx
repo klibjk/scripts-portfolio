@@ -46,8 +46,8 @@ export function ScriptCard({ script }: ScriptCardProps) {
               <h3 className="text-base font-medium text-gray-900 dark:text-white">{script.title}</h3>
               <span className={`inline-flex items-center px-2.5 py-0.5 mt-1 rounded-full text-xs font-medium ${
                 isWindows 
-                  ? "bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300" 
-                  : "bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300"
+                  ? "bg-blue-200 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300" 
+                  : "bg-purple-200 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300"
               }`}>
                 {isWindows ? <FaWindows className="mr-1" /> : <FaLinux className="mr-1" />}
                 {script.language}
@@ -69,7 +69,7 @@ export function ScriptCard({ script }: ScriptCardProps) {
           {script.highlights.map((highlight, index) => (
             <span 
               key={index} 
-              className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 dark:bg-dark-600 text-gray-800 dark:text-gray-200"
+              className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-200 dark:bg-dark-600 text-gray-800 dark:text-gray-200"
             >
               {highlight}
             </span>

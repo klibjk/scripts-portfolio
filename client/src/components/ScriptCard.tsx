@@ -78,10 +78,10 @@ export function ScriptCard({ script }: ScriptCardProps) {
         <div className="mt-4 pt-4 border-t border-gray-200 dark:border-dark-600 flex justify-between items-center">
           <Link 
             href={`/scripts/${script.key}`}
-            className={`inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-gray-900 ${
+            className={`inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white ${
               isWindows 
-                ? "bg-primary-300 hover:bg-primary-400 focus:ring-primary-500" 
-                : "bg-secondary-300 hover:bg-secondary-400 focus:ring-secondary-500"
+                ? "bg-primary-600 hover:bg-primary-700 focus:ring-primary-500" 
+                : "bg-secondary-600 hover:bg-secondary-700 focus:ring-secondary-500"
             } focus:outline-none focus:ring-2 focus:ring-offset-2`}
           >
             View Script

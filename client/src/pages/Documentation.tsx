@@ -12,7 +12,7 @@ export default function Documentation() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Documentation</h1>
         <p className="text-gray-600 dark:text-gray-300">
-          Learn how to use the Script Portfolio and get the most out of the available scripts.
+          Learn how to use the Script Portfolio and contribute your own scripts to the collection.
         </p>
       </div>
 
@@ -30,7 +30,7 @@ export default function Documentation() {
               reliability in production environments.
             </p>
             <p>
-              This tool was created to showcase scripting skills relevant to David Povis' "Systems 
+              This tool was created to showcase scripting skills relevant to the NinjaOne "Systems 
               Engineer – Product Scripting" role, demonstrating expertise in Windows and Linux 
               automation.
             </p>
@@ -69,6 +69,29 @@ export default function Documentation() {
             </ul>
           </div>
         </section>
+
+        {/* Contributing Section */}
+        <section className="bg-white dark:bg-dark-700 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-dark-600">
+          <div className="flex items-center mb-4">
+            <FaDownload className="text-primary-600 dark:text-primary-400 text-xl mr-2" />
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">Contributing Scripts</h2>
+          </div>
+          <div className="prose dark:prose-invert max-w-none">
+            <p>
+              To contribute a script to the portfolio, you'll need to:
+            </p>
+            <ol>
+              <li>Create a well-documented script following our coding standards</li>
+              <li>Add comprehensive documentation in markdown format</li>
+              <li>Test the script in multiple environments</li>
+              <li>Submit through the admin dashboard (requires authentication)</li>
+            </ol>
+            <p>
+              All submitted scripts undergo a review process before being added to the gallery.
+            </p>
+          </div>
+        </section>
+
         {/* Technical Details Section */}
         <section className="bg-white dark:bg-dark-700 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-dark-600">
           <div className="flex items-center mb-4">

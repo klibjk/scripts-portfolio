@@ -829,5 +829,114 @@ The script outputs:
       version: "1.0.0",
       changes: "Initial release with Windows Event Log monitoring for failed logins",
     }
+  },
+  {
+    script: {
+      key: "SH-04",
+      language: "Bash",
+      title: "Public-IP-Fetcher.sh",
+      summary: "Script that fetches the public IP address using an external REST API and parses JSON response to display network information.",
+      code: `#!/bin/bash
+
+# Script to get the public IP address using an external API and parse JSON
+
+echo "--------------------------------------------------"
+echo "Public IP Address Fetcher - $(date)"
+echo "--------------------------------------------------"
+
+API_URL="https://ipinfo.io/json" # A common public IP API that returns JSON
+
+echo "Fetching public IP from $API_URL..."
+
+response=$(curl -sL "$API_URL")
+curl_exit_code=$?
+
+if [ $curl_exit_code -ne 0 ]; then
+    echo "ERROR: curl command failed with exit code $curl_exit_code. Could not reach $API_URL."
+    exit 1
+fi
+
+if ! command -v jq &> /dev/null; then
+    echo "WARNING: jq command could not be found. Please install jq to parse JSON."
+    echo "Raw response: $response"
+    fallback_ip=$(echo "$response" | grep -oP '"ip": "\\K[^"]+')
+    if [[ -n "$fallback_ip" ]]; then
+        echo "INFO: Fallback Public IP: $fallback_ip (extracted with grep)"
+    else
+        echo "ERROR: Could not extract IP using fallback method."
+    fi
+    exit 1
+fi
+
+public_ip=$(echo "$response" | jq -r '.ip')
+city=$(echo "$response" | jq -r '.city')
+region=$(echo "$response" | jq -r '.region')
+country=$(echo "$response" | jq -r '.country')
+org=$(echo "$response" | jq -r '.org')
+
+if [[ -z "$public_ip" || "$public_ip" == "null" ]]; then
+    echo "ERROR: Could not parse IP address from the API response."
+    echo "Raw response: $response"
+else
+    echo "OK: Public IP Address: $public_ip"
+    echo "Location: $city, $region, $country"
+    echo "Organization: $org"
+fi
+
+echo "--------------------------------------------------"
+echo "Fetch Complete."
+echo "--------------------------------------------------"`,
+      readme: `# Public IP Address Fetcher Script
+
+Script that fetches the public IP address using an external REST API and parses JSON response to display network information.
+
+## Purpose
+This script demonstrates how to interact with REST APIs using curl and parse JSON responses. It fetches public IP information and displays location details.
+
+## Compatibility
+- Linux (All distributions)
+- macOS
+- Windows (with WSL or Git Bash)
+
+## Prerequisites
+- curl command-line tool
+- jq for JSON parsing (recommended)
+- Internet connectivity
+
+## Usage
+1. Save as public_ip_fetcher.sh
+2. Make executable: chmod +x public_ip_fetcher.sh
+3. Run: ./public_ip_fetcher.sh
+
+## Features
+- Uses ipinfo.io REST API for IP geolocation
+- JSON parsing with jq
+- Fallback parsing method using grep if jq is unavailable
+- Error handling for network failures
+- Displays IP, city, region, country, and organization
+
+## Dependencies
+- curl (usually pre-installed)
+- jq (optional but recommended): sudo apt install jq or brew install jq
+
+## API Information
+Uses the free ipinfo.io API which provides:
+- Public IP address
+- Geographic location
+- ISP/Organization information
+- No authentication required for basic usage`,
+      author: "David Povis",
+      version: "1.0.0",
+      compatibleOS: "Linux (All distributions), macOS, Windows (WSL)",
+      requiredModules: "curl, jq (optional)",
+      dependencies: "Internet connectivity, curl, jq recommended",
+      license: "MIT",
+    },
+    tags: ["API", "REST", "JSON", "Networking", "IP Geolocation"],
+    highlights: ["REST API Integration", "JSON Parsing", "Error Handling"],
+    version: {
+      version: "1.0.0",
+      changes: "Initial release with public IP fetching and JSON parsing",
+    }
   }
 ];

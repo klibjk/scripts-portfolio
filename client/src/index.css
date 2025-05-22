@@ -116,6 +116,31 @@
     --input: 0 0% 27%;
     --ring: 0 0% 27%;
   }
+  
+  /* Apply different background and text colors based on theme */
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+  }
+  
+  /* Explicitly set background colors for dark mode */
+  .dark body,
+  .dark div.bg-white,
+  .dark div.bg-gray-50,
+  .dark div.bg-gray-100,
+  .dark div.bg-gray-200 {
+    background-color: var(--bg-color);
+  }
+  
+  /* Explicitly set text colors for dark mode */
+  .dark h1, 
+  .dark h2, 
+  .dark h3, 
+  .dark p, 
+  .dark span:not([class*="bg"]), 
+  .dark div:not([class*="bg"]) {
+    color: var(--text-color);
+  }
 }
 
 /* Custom component styles with specific class selectors */

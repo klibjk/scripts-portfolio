@@ -7,6 +7,7 @@ import Home from "@/pages/Home";
 import ScriptDetailPage from "@/pages/ScriptDetailPage";
 import Documentation from "@/pages/Documentation";
 import AdminDashboard from "@/pages/AdminDashboard";
+import TestMode from "@/pages/TestMode";
 import NotFound from "@/pages/not-found";
 import { MainLayout } from "@/layouts/MainLayout";
 import { useEffect } from "react";
@@ -20,6 +21,7 @@ function Router() {
       <Route path="/scripts/:key" component={ScriptDetailPage} />
       <Route path="/documentation" component={Documentation} />
       <Route path="/admin" component={AdminDashboard} />
+      <Route path="/test-mode" component={TestMode} />
       <Route component={NotFound} />
     </Switch>
   );

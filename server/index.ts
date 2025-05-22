@@ -1,7 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
-// import { seedDatabase } from "./scripts";
+import { seedDatabase } from "./scripts";
 
 const app = express();
 app.use(express.json());
@@ -38,8 +38,13 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  // Database seeding temporarily disabled due to script data issues
-  log("Database seeding skipped");
+  // Seed database with initial scripts
+  try {
+    await seedDatabase();
+    log("Database seeding complete");
+  } catch (error) {
+    log(`Error seeding database: ${error}`);
+  }
 
   const server = await registerRoutes(app);
 

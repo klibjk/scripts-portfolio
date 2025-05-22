@@ -938,5 +938,110 @@ Uses the free ipinfo.io API which provides:
       version: "1.0.0",
       changes: "Initial release with public IP fetching and JSON parsing",
     }
+  },
+  {
+    script: {
+      key: "PS-04",
+      language: "PowerShell",
+      title: "Public-IP-Fetcher.ps1",
+      summary: "PowerShell script that fetches the public IP address and detailed geolocation information using an external REST API.",
+      code: `# Script to get the public IP address using an external API
+
+Write-Host "--------------------------------------------------"
+Write-Host "Public IP Address Fetcher - $(Get-Date)"
+Write-Host "--------------------------------------------------"
+
+$ApiUrl = "https://ipinfo.io/json" # A common public IP API that returns JSON
+
+Write-Host "Fetching public IP from $ApiUrl..."
+
+try {
+    # Invoke-RestMethod automatically parses JSON responses into PowerShell objects
+    $Response = Invoke-RestMethod -Uri $ApiUrl -UseBasicParsing -ErrorAction Stop
+
+    if ($Response -and $Response.ip) {
+        Write-Host "OK: Public IP Address: $($Response.ip)"
+        Write-Host "Hostname: $($Response.hostname)"
+        Write-Host "City: $($Response.city)"
+        Write-Host "Region: $($Response.region)"
+        Write-Host "Country: $($Response.country)"
+        Write-Host "Location: $($Response.loc)"
+        Write-Host "Organization: $($Response.org)"
+        Write-Host "Postal Code: $($Response.postal)"
+        Write-Host "Timezone: $($Response.timezone)"
+    } else {
+        Write-Warning "Could not retrieve or parse IP address from the API response." # Write-Warning is fine
+        Write-Host "Raw Response:"
+        Write-Output $Response | ConvertTo-Json # Display raw response if parsing failed
+    }
+}
+catch {
+    Write-Error "Error fetching public IP: $($_.Exception.Message)"
+    if ($_.Exception.Response) {
+        Write-Error "Status Code: $($_.Exception.Response.StatusCode)"
+        Write-Error "Status Description: $($_.Exception.Response.StatusDescription)"
+    }
+}
+
+Write-Host "--------------------------------------------------"
+Write-Host "Fetch Complete."
+Write-Host "--------------------------------------------------"`,
+      readme: `# Public IP Address Fetcher Script - PowerShell Version
+
+PowerShell script that fetches the public IP address and detailed geolocation information using an external REST API.
+
+## Purpose
+This script demonstrates how to interact with REST APIs using PowerShell's built-in Invoke-RestMethod cmdlet. It fetches comprehensive public IP information including geolocation data.
+
+## Compatibility
+- Windows 10, Windows 11
+- Windows Server 2016, 2019, 2022
+- PowerShell 5.1 or later
+- PowerShell Core (cross-platform)
+
+## Prerequisites
+- PowerShell 5.1 or higher
+- Internet connectivity
+- No additional modules required (uses built-in cmdlets)
+
+## Usage
+1. Save as Public-IP-Fetcher.ps1
+2. Open PowerShell
+3. Run: .\\Public-IP-Fetcher.ps1
+
+## Features
+- Uses Invoke-RestMethod for automatic JSON parsing
+- Comprehensive error handling with detailed error messages
+- Displays extensive geolocation information
+- No external dependencies required
+
+## Information Displayed
+- Public IP address
+- Hostname (when available)
+- City, region, and country
+- Geographic coordinates
+- ISP/Organization
+- Postal code
+- Timezone information
+
+## API Information
+Uses the free ipinfo.io API which provides:
+- Comprehensive IP geolocation data
+- No authentication required for basic usage
+- Automatic JSON response parsing in PowerShell
+- Reliable uptime and performance`,
+      author: "David Povis",
+      version: "1.0.0",
+      compatibleOS: "Windows 10, Windows 11, Windows Server 2016+, PowerShell Core",
+      requiredModules: "None (uses built-in cmdlets)",
+      dependencies: "PowerShell 5.1+, Internet connectivity",
+      license: "MIT",
+    },
+    tags: ["API", "REST", "PowerShell", "Networking", "IP Geolocation"],
+    highlights: ["REST API Integration", "Built-in JSON Parsing", "Comprehensive Error Handling"],
+    version: {
+      version: "1.0.0",
+      changes: "Initial release with PowerShell REST API integration",
+    }
   }
 ];

@@ -9,157 +9,143 @@ export const seedScripts: {
 }[] = [
   {
     script: {
-      key: "PS-01",
-      language: "PowerShell",
-      title: "Win-SecBaseline.ps1",
-      summary: "Hardens local security baselines (lockout policy, firewall rules, TLS settings).",
-      code: `# Win-SecBaseline.ps1
-# Applies security baselines to Windows devices according to CIS benchmarks
-# Author: Security Team
-# Version: 1.2.0
-
-[CmdletBinding()]
-param (
-    [Parameter()]
-    [switch]$Audit = $false,
-    
-    [Parameter()]
-    [string]$OutputPath = "$env:TEMP\\SecBaseline_$(Get-Date -Format 'yyyyMMdd_HHmmss').json",
-    
-    [Parameter()]
-    [ValidateRange(1,5)]
-    [int]$SecurityLevel = 3
-)
-
-# Function code would be here in the full script
-Write-Host "Applying security baseline with level: $SecurityLevel"`,
-      readme: `# Win-SecBaseline.ps1
-
-> **⚠️ Warning:** This script modifies system security settings. Always test in a non-production environment first.
-
-## Overview
-
-This script applies security baselines to Windows devices according to Center for Internet Security (CIS) benchmarks. It hardens the local security settings, configures firewall rules, and updates TLS settings to improve the overall security posture of the system.
-
-## Features
-
-- Configures account lockout policy to prevent brute force attacks
-- Enables Windows Firewall and sets default inbound action to Block
-- Disables insecure SSL/TLS protocols and enables TLS 1.2
-- Outputs results in JSON format for easy integration with monitoring tools
-- Supports audit mode to check compliance without making changes`,
-      author: "Security Team",
-      version: "1.2.0",
-      compatibleOS: "Windows 10, Windows 11, Windows Server 2016+",
-      requiredModules: "None (uses built-in cmdlets)",
-      dependencies: "Administrative privileges",
-      license: "MIT",
-    },
-    tags: ["Security", "Hardening", "CIS Benchmark", "Windows", "Firewall", "TLS"],
-    highlights: ["CIM/WMI", "Idempotent", "JSON Output"],
-    version: {
-      version: "1.2.0",
-      changes: "Added TLS 1.2 configuration and improved JSON output formatting",
-    }
-  },
-  {
-    script: {
-      key: "PS-02",
-      language: "PowerShell",
-      title: "Win-UpdateReset.ps1",
-      summary: "Resets Windows Update components & forces remediation cycle.",
-      code: `# Win-UpdateReset.ps1
-# Resets Windows Update components and forces remediation cycle
-# Author: IT Support Team
-# Version: 1.1.0
-
-[CmdletBinding()]
-param (
-    [Parameter()]
-    [switch]$ForceRestart = $false,
-    
-    [Parameter()]
-    [switch]$Verbose = $false,
-    
-    [Parameter()]
-    [string]$LogPath = "$env:TEMP\\WindowsUpdate_Reset.log"
-)
-
-# Function code would be here in the full script
-Write-Host "Resetting Windows Update components..."`,
-      readme: `# Win-UpdateReset.ps1
-
-## Overview
-
-This script resets Windows Update components when they become corrupted or stop functioning correctly. It stops relevant services, cleans up cache directories, resets Windows Update components, and forces a new update detection cycle.
-
-## Features
-
-- Stops Windows Update related services
-- Renames (backs up) SoftwareDistribution and catroot2 folders
-- Uses DISM to restore system health
-- Resets Windows Update authorization
-- Restarts services and forces update detection
-- Comprehensive logging to file and Event Log
-- Option to force restart after completion`,
-      author: "IT Support Team",
-      version: "1.1.0",
-      compatibleOS: "Windows 10, Windows 11",
-      requiredModules: "None (uses built-in cmdlets)",
-      dependencies: "Administrative privileges",
-      license: "MIT",
-    },
-    tags: ["Windows", "Updates", "Troubleshooting", "Maintenance", "System"],
-    highlights: ["Services", "SoftwareDistribution", "Event Log"],
-    version: {
-      version: "1.1.0",
-      changes: "Added Event Log integration and improved error handling",
-    }
-  },
-  {
-    script: {
       key: "SH-01",
       language: "Bash",
-      title: "Linux-DiskMonitor.sh",
-      summary: "Monitors disk usage & mails IT when threshold > 85%.",
+      title: "System-Health-Check.sh",
+      summary: "Gathers essential system information and health metrics for quick diagnostics.",
       code: `#!/bin/bash
-# Linux-DiskMonitor.sh
-# Monitors disk usage and alerts when thresholds are exceeded
-# Author: Linux Systems Team
-# Version: 1.0.0
 
-# Configuration variables
-THRESHOLD=85                             # Default alert threshold percentage
-EMAIL_TO="it-alerts@example.com"         # Default email recipient
+# Script to gather basic system information and health metrics
 
-# Function code would be here in the full script
-echo "Checking disk usage with threshold: $THRESHOLD%"`,
-      readme: `# Linux-DiskMonitor.sh
+echo "--------------------------------------------------"
+echo "System Health Check - $(date)"
+echo "--------------------------------------------------"
 
-## Overview
+# --- OS Information ---
+echo -e "\\n--- Operating System ---"
+if [[ "$(uname)" == "Linux" ]]; then
+    cat /etc/os-release | grep PRETTY_NAME
+elif [[ "$(uname)" == "Darwin" ]]; then
+    sw_vers
+fi
 
-This Bash script monitors disk usage across all mounted filesystems and sends email alerts when usage exceeds defined thresholds. It's designed to run as a cron job for proactive disk space management.
+# --- Hostname & Uptime ---
+echo -e "\\n--- Hostname & Uptime ---"
+hostname
+uptime
 
-## Features
+# --- CPU Usage ---
+echo -e "\\n--- CPU Usage (Top 5 processes) ---"
+ps -eo pcpu,pid,user,args --sort=-pcpu | head -n 6
 
-- Monitors all mounted filesystems (or specific ones if configured)
-- Configurable threshold for alerts (default: 85%)
-- Email notifications with detailed disk usage information
-- Supports exclusion of specific mount points
-- Maintains a log of checks and alerts
-- Customizable output formats (text, CSV, JSON)`,
-      author: "Linux Systems Team",
+# --- Memory Usage ---
+echo -e "\\n--- Memory Usage ---"
+if [[ "$(uname)" == "Linux" ]]; then
+    free -h
+elif [[ "$(uname)" == "Darwin" ]]; then
+    vm_stat | perl -ne '/page size of (\\d+)/ and $size=$1; /Pages free:\\s+(\\d+)/ and printf "Free RAM: %.2f MiB\\n", $1 * $size / 1048576'
+    top -l 1 | head -n 10 | grep PhysMem
+fi
+
+# --- Disk Usage ---
+echo -e "\\n--- Disk Usage (Root Filesystem) ---"
+df -h /
+
+# --- Network Information ---
+echo -e "\\n--- Network Configuration (Primary Interface) ---"
+if [[ "$(uname)" == "Linux" ]]; then
+    ip addr show $(ip route | grep default | awk '{print $5}' | head -n1)
+elif [[ "$(uname)" == "Darwin" ]]; then
+    ifconfig $(route get default | grep interface | awk '{print $2}')
+fi
+
+# --- Check for recent system errors (Linux example) ---
+if [[ "$(uname)" == "Linux" ]]; then
+    echo -e "\\n--- Recent System Errors (last 10 lines of dmesg with 'error' or 'fail') ---"
+    dmesg | grep -iE 'error|fail' | tail -n 10
+fi
+
+echo -e "\\n--------------------------------------------------"
+echo "Health Check Complete."
+echo "--------------------------------------------------"`,
+      readme: `# Documentation: System Information & Health Check Script
+
+This script is designed to provide a quick overview of a system's current status, gathering essential hardware and software information along with basic health metrics. It's a foundational tool for IT professionals and Managed Service Providers (MSPs) to perform initial assessments or routine checks on endpoints.
+
+## System Information & Health Check - Bash Version
+
+### Purpose:
+This Bash script gathers key system information and performs basic health checks on Linux and macOS systems. It is designed to provide a quick snapshot of the machine's configuration and current operational status, useful for troubleshooting, inventory, and routine monitoring.
+
+### Operating System Compatibility:
+- Linux (tested on Debian/Ubuntu-based systems, RHEL/CentOS-based systems)
+- macOS
+
+### Prerequisites:
+- Standard Unix/Linux command-line utilities (e.g., uname, hostname, uptime, ps, free, df, ip, ss, dmesg, sw_vers, vm_stat, ifconfig, route, perl). Most are pre-installed on target systems.
+- perl is used for a specific memory calculation on macOS; if not available, that specific metric might not display.
+
+### Usage:
+1. Save the script to a file (e.g., system_health_check.sh).
+2. Make the script executable: chmod +x system_health_check.sh
+3. Run the script: ./system_health_check.sh
+
+Some commands for specific information (like dmesg for recent errors on Linux) might produce more detailed output if run with sudo ./system_health_check.sh, but the script is generally designed to run as a standard user.
+
+### Output:
+The script outputs formatted information to the console, including:
+
+- Operating System details (name, version)
+- Hostname and system uptime
+- Top 5 CPU-consuming processes
+- Memory usage (total, used, free)
+- Disk usage for the root filesystem
+- Network configuration for the primary interface
+- (Linux only) Recent system errors from dmesg (if any)
+
+### Example Snippet of Output (will vary by system):
+
+\`\`\`
+--------------------------------------------------
+System Health Check - Thu May 22 13:58:20 EDT 2025
+--------------------------------------------------
+
+--- Operating System ---
+PRETTY_NAME="Ubuntu 22.04.3 LTS"
+
+--- Hostname & Uptime ---
+my-linux-server
+ 13:58:20 up 10 days,  2:17,  1 user,  load average: 0.05, 0.15, 0.10
+
+--- CPU Usage (Top 5 processes) ---
+%CPU   PID USER     COMMAND
+ 0.5  1234 myuser   /usr/bin/some_process -arg
+ 0.2   876 root     /usr/sbin/another_daemon
+...
+
+--- Memory Usage ---
+              total        used        free      shared  buff/cache   available
+Mem:          7.7Gi       1.2Gi       5.8Gi        12Mi       800Mi       6.3Gi
+Swap:         2.0Gi          0B       2.0Gi
+...
+\`\`\`
+
+### Notes:
+- The accuracy and availability of some metrics (like specific memory stats on macOS or network interface detection) can vary slightly between OS versions and configurations.
+- This script provides a baseline; it can be extended to gather more specific information (e.g., specific application versions, running services, detailed hardware inventory).
+- For continuous monitoring, this script could be scheduled as a cron job, with output redirected to a file or a monitoring system.`,
+      author: "David Povis",
       version: "1.0.0",
-      compatibleOS: "Linux (All distributions)",
-      requiredModules: "mailutils (for email alerts)",
-      dependencies: "Access to mail server for notifications",
+      compatibleOS: "Linux (All distributions), macOS",
+      requiredModules: "Standard Unix utilities, perl (for macOS memory calculation)",
+      dependencies: "None",
       license: "MIT",
     },
-    tags: ["Linux", "Monitoring", "Disk Space", "Email Alerts", "Cron"],
-    highlights: ["Portable", "Configurable", "Multiple Output Formats"],
+    tags: ["Linux", "macOS", "System Health", "Monitoring", "Diagnostics"],
+    highlights: ["Cross-Platform", "Comprehensive Output", "Easy to Use"],
     version: {
       version: "1.0.0",
-      changes: "Initial release with basic monitoring and alert functionality",
+      changes: "Initial release with cross-platform support for Linux and macOS",
     }
   }
 ];

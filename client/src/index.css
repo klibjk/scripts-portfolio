@@ -2,89 +2,158 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Force all text to black */
-* {
-  color: black !important;
-}
-
-/* Force white backgrounds */
-body, div, header, main, footer, nav, aside, section, article {
-  background-color: white !important;
-}
-
-/* Special styling for buttons and interactive elements */
-button, a, .button, [role="button"] {
-  background-color: #e0e0e0 !important;
-  color: black !important;
-  border: 1px solid #999 !important;
-}
-
-/* Special class for blue buttons */
-.PowerShell, [class*="PowerShell"] {
-  background-color: #bbd6ff !important;
-  color: black !important;
-}
-
-/* Special class for purple buttons */
-.Bash, [class*="Bash"] {
-  background-color: #e3c8ff !important;
-  color: black !important;
-}
-
-/* Override any text colors that might be set */
-h1, h2, h3, h4, h5, h6, p, span, a, button, input, select, textarea, label, li, div {
-  color: black !important;
-}
-
-/* Set all borders to be more visible */
-* {
-  border-color: #999 !important;
-}
-
-/* Basic tailwind variables */
+/* Properly structured CSS with high-specificity selectors */
 :root {
+  /* Core colors with proper contrast */
+  --text-color: #000000;
+  --bg-color: #ffffff;
+  --border-color: #999999;
+  --muted-bg: #f0f0f0;
+  --primary-bg: #0056b3;
+  --secondary-bg: #6c757d;
+  --accent-bg: #f8f9fa;
+  --powerscript-bg: #bbd6ff;
+  --bash-bg: #e3c8ff;
+  --button-bg: #e0e0e0;
+  --link-color: #0056b3;
+  
+  /* Tailwind variables with proper contrast values */
   --background: 0 0% 100%;
   --foreground: 0 0% 0%;
   --card: 0 0% 100%;
   --card-foreground: 0 0% 0%;
   --popover: 0 0% 100%;
   --popover-foreground: 0 0% 0%;
-  --primary: 0 0% 9%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 0 0% 96%;
-  --secondary-foreground: 0 0% 9%;
+  --primary: 210 100% 35%;
+  --primary-foreground: 0 0% 0%;
+  --secondary: 210 17% 98%;
+  --secondary-foreground: 0 0% 0%;
   --muted: 0 0% 96%;
-  --muted-foreground: 0 0% 9%;
-  --accent: 0 0% 96%;
-  --accent-foreground: 0 0% 9%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 0 0% 89.8%;
-  --input: 0 0% 89.8%;
-  --ring: 0 0% 3.9%;
+  --muted-foreground: 0 0% 0%;
+  --accent: 210 40% 96%;
+  --accent-foreground: 0 0% 0%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 0%;
+  --border: 0 0% 60%;
+  --input: 0 0% 60%;
+  --ring: 0 0% 60%;
   --radius: 0.5rem;
 }
 
-.dark {
-  --background: 0 0% 100%;
-  --foreground: 0 0% 0%;
-  --card: 0 0% 100%;
-  --card-foreground: 0 0% 0%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 0%;
-  --primary: 0 0% 9%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 0 0% 96%;
-  --secondary-foreground: 0 0% 9%;
-  --muted: 0 0% 96%;
-  --muted-foreground: 0 0% 9%;
-  --accent: 0 0% 96%;
-  --accent-foreground: 0 0% 9%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 0 0% 89.8%;
-  --input: 0 0% 89.8%;
-  --ring: 0 0% 3.9%;
+@layer base {
+  /* Base elements */
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+  }
+  
+  /* Typography */
+  h1, h2, h3, h4, h5, h6, p, span, li, td, th, label, input, textarea, select {
+    color: var(--text-color);
+  }
+  
+  /* Links and buttons */
+  a, button, [role="button"] {
+    color: var(--text-color);
+    background-color: var(--button-bg);
+    border: 1px solid var(--border-color);
+  }
+  
+  /* Card elements */
+  .rounded-lg, .bg-white, [class*="bg-gray"], [class*="bg-dark"] {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border-color: var(--border-color);
+  }
+  
+  /* Tag elements */
+  .rounded-full, [class*="bg-blue"], [class*="bg-purple"] {
+    background-color: var(--muted-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+  }
+  
+  /* Script type indicators */
+  .PowerShell, [class*="PowerShell"] {
+    background-color: var(--powerscript-bg);
+  }
+  
+  .Bash, [class*="Bash"] {
+    background-color: var(--bash-bg);
+  }
+  
+  /* Dark mode is temporarily same as light mode */
+  .dark {
+    --text-color: #000000;
+    --bg-color: #ffffff; 
+    --border-color: #999999;
+    --muted-bg: #f0f0f0;
+    --primary-bg: #0056b3;
+    --secondary-bg: #6c757d;
+    --accent-bg: #f8f9fa;
+    --powerscript-bg: #bbd6ff;
+    --bash-bg: #e3c8ff;
+    --button-bg: #e0e0e0;
+    --link-color: #0056b3;
+    
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+    --primary: 210 100% 35%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 210 17% 98%;
+    --secondary-foreground: 0 0% 0%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 0%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 0 0% 0%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 0%;
+    --border: 0 0% 60%;
+    --input: 0 0% 60%;
+    --ring: 0 0% 60%;
+  }
+}
+
+/* Custom component styles with specific class selectors */
+.script-card {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+}
+
+.script-title {
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.script-tag {
+  background-color: var(--muted-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+}
+
+.view-button {
+  background-color: var(--button-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+}
+
+/* Specificity-based overrides that don't use !important */
+[class*="text-white"], 
+[class*="text-gray"], 
+[class*="text-slate"] {
+  color: var(--text-color);
+}
+
+[class*="bg-dark"],
+[class*="bg-gray-900"],
+[class*="bg-gray-800"],
+[class*="bg-gray-700"] {
+  background-color: var(--bg-color);
 }
 
 @layer base {

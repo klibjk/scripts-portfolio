@@ -173,7 +173,7 @@ export default function AdminDashboard() {
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                               {timestamp}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-slate-100">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                               {action}
                             </td>
                             <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
@@ -199,7 +199,7 @@ export default function AdminDashboard() {
             </div>
             <div className="px-4 py-5 sm:p-6 space-y-4">
               <button
-                className="w-full flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-black dark:text-slate-100 bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                className="w-full flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
                 onClick={() => logAgentAction("Admin Action", "Clicked add new script button")}
               >
                 Add New Script

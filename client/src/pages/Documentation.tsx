@@ -10,7 +10,7 @@ export default function Documentation() {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-black dark:text-slate-100 mb-4">Documentation</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Documentation</h1>
         <p className="text-gray-600 dark:text-gray-300">
           Learn how to use the Script Portfolio and get the most out of the available scripts.
         </p>
@@ -30,8 +30,8 @@ export default function Documentation() {
               reliability in production environments.
             </p>
             <p>
-              This tool was created to showcase scripting skills relevant to Systems 
-              Engineering roles, demonstrating expertise in Windows and Linux 
+              This tool was created to showcase scripting skills relevant to the NinjaOne "Systems 
+              Engineer – Product Scripting" role, demonstrating expertise in Windows and Linux 
               automation.
             </p>
           </div>

@@ -2,201 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Single theme colors */
 :root {
-  --bg-primary: 0 0% 100%;
-  --bg-secondary: 210 17% 98%;
-  --text-primary: 0 0% 9%;
-  --text-secondary: 0 0% 45%;
-  --border-color: 220 13% 91%;
-}
-
-@layer base {
-  /* Apply global styles */
-  html, body {
-    @apply bg-white text-gray-900;
-    min-height: 100%;
+      --background: 0 0% 100%;
+--foreground: 20 14.3% 4.1%;
+--muted: 60 4.8% 95.9%;
+--muted-foreground: 25 5.3% 44.7%;
+--popover: 0 0% 100%;
+--popover-foreground: 20 14.3% 4.1%;
+--card: 0 0% 100%;
+--card-foreground: 20 14.3% 4.1%;
+--border: 20 5.9% 90%;
+--input: 20 5.9% 90%;
+--primary: 207 90% 54%;
+--primary-foreground: 211 100% 99%;
+--secondary: 60 4.8% 95.9%;
+--secondary-foreground: 24 9.8% 10%;
+--accent: 60 4.8% 95.9%;
+--accent-foreground: 24 9.8% 10%;
+--destructive: 0 84.2% 60.2%;
+--destructive-foreground: 60 9.1% 97.8%;
+--ring: 20 14.3% 4.1%;
+--radius: 0.5rem;
   }
-}
-
-/* Properly structured CSS with high-specificity selectors */
-:root {
-  /* Core colors with proper contrast */
-  --text-color: #000000;
-  --bg-color: #ffffff;
-  --border-color: #999999;
-  --muted-bg: #f0f0f0;
-  --primary-bg: #0056b3;
-  --secondary-bg: #6c757d;
-  --accent-bg: #f8f9fa;
-  --powerscript-bg: #bbd6ff;
-  --bash-bg: #e3c8ff;
-  --button-bg: #e0e0e0;
-  --link-color: #0056b3;
-  
-  /* Tailwind variables with proper contrast values */
-  --background: 0 0% 100%;
-  --foreground: 0 0% 0%;
-  --card: 0 0% 100%;
-  --card-foreground: 0 0% 0%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 0%;
-  --primary: 210 100% 35%;
-  --primary-foreground: 0 0% 0%;
-  --secondary: 210 17% 98%;
-  --secondary-foreground: 0 0% 0%;
-  --muted: 0 0% 96%;
-  --muted-foreground: 0 0% 0%;
-  --accent: 210 40% 96%;
-  --accent-foreground: 0 0% 0%;
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 0 0% 0%;
-  --border: 0 0% 60%;
-  --input: 0 0% 60%;
-  --ring: 0 0% 60%;
-  --radius: 0.5rem;
-}
-
-@layer base {
-  /* Base elements */
-  body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-  }
-  
-  /* Typography */
-  h1, h2, h3, h4, h5, h6, p, span, li, td, th, label, input, textarea, select {
-    color: var(--text-color);
-  }
-  
-  /* Links and buttons */
-  a, button, [role="button"] {
-    color: var(--text-color);
-    background-color: var(--button-bg);
-    border: 1px solid var(--border-color);
-  }
-  
-  /* Card elements */
-  .rounded-lg, .bg-white, [class*="bg-gray"], [class*="bg-dark"] {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    border-color: var(--border-color);
-  }
-  
-  /* Tag elements */
-  .rounded-full, [class*="bg-blue"], [class*="bg-purple"] {
-    background-color: var(--muted-bg);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
-  }
-  
-  /* Script type indicators */
-  .PowerShell, [class*="PowerShell"] {
-    background-color: var(--powerscript-bg);
-  }
-  
-  .Bash, [class*="Bash"] {
-    background-color: var(--bash-bg);
-  }
-  
-  /* Dark mode with proper contrast */
   .dark {
-    --text-color: #ffffff;
-    --bg-color: #121212; 
-    --border-color: #444444;
-    --muted-bg: #2a2a2a;
-    --primary-bg: #0077cc;
-    --secondary-bg: #444444;
-    --accent-bg: #333333;
-    --powerscript-bg: #1a3d75;
-    --bash-bg: #4b2d6b;
-    --button-bg: #333333;
-    --link-color: #67b7ff;
-    
-    --background: 0 0% 7%;
-    --foreground: 0 0% 100%;
-    --card: 0 0% 9%;
-    --card-foreground: 0 0% 100%;
-    --popover: 0 0% 9%;
-    --popover-foreground: 0 0% 100%;
-    --primary: 210 100% 50%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 20%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 100%;
-    --accent: 0 0% 20%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 27%;
-    --input: 0 0% 27%;
-    --ring: 0 0% 27%;
+      --background: 240 10% 3.9%;
+--foreground: 0 0% 98%;
+--muted: 240 3.7% 15.9%;
+--muted-foreground: 240 5% 64.9%;
+--popover: 240 10% 3.9%;
+--popover-foreground: 0 0% 98%;
+--card: 240 10% 3.9%;
+--card-foreground: 0 0% 98%;
+--border: 240 3.7% 15.9%;
+--input: 240 3.7% 15.9%;
+--primary: 207 90% 54%;
+--primary-foreground: 211 100% 99%;
+--secondary: 240 3.7% 15.9%;
+--secondary-foreground: 0 0% 98%;
+--accent: 240 3.7% 15.9%;
+--accent-foreground: 0 0% 98%;
+--destructive: 0 62.8% 30.6%;
+--destructive-foreground: 0 0% 98%;
+--ring: 240 4.9% 83.9%;
+--radius: 0.5rem;
   }
-  
-  /* Apply different background and text colors based on theme */
-  body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-  }
-  
-  /* Explicitly set background colors for dark mode */
-  .dark body,
-  .dark div.bg-white,
-  .dark div.bg-gray-50,
-  .dark div.bg-gray-100,
-  .dark div.bg-gray-200 {
-    background-color: var(--bg-color);
-  }
-  
-  /* Explicitly set text colors for dark mode */
-  .dark h1, 
-  .dark h2, 
-  .dark h3, 
-  .dark p, 
-  .dark span:not([class*="bg"]), 
-  .dark div:not([class*="bg"]) {
-    color: var(--text-color);
-  }
-}
-
-/* Custom component styles with specific class selectors */
-.script-card {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  border: 1px solid var(--border-color);
-}
-
-.script-title {
-  color: var(--text-color);
-  font-weight: 600;
-}
-
-.script-tag {
-  background-color: var(--muted-bg);
-  color: var(--text-color);
-  border: 1px solid var(--border-color);
-}
-
-.view-button {
-  background-color: var(--button-bg);
-  color: var(--text-color);
-  border: 1px solid var(--border-color);
-}
-
-/* Specificity-based overrides that don't use !important */
-[class*="text-white"], 
-[class*="text-gray"], 
-[class*="text-slate"] {
-  color: var(--text-color);
-}
-
-[class*="bg-dark"],
-[class*="bg-gray-900"],
-[class*="bg-gray-800"],
-[class*="bg-gray-700"] {
-  background-color: var(--bg-color);
-}
 
 @layer base {
   * {

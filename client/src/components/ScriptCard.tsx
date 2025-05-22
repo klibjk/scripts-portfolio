@@ -31,23 +31,23 @@ export function ScriptCard({ script }: ScriptCardProps) {
   };
   
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-300 overflow-hidden flex flex-col hover:shadow-md transition-shadow">
-      <div className="px-4 py-4 sm:px-6 border-b border-gray-300 bg-white">
+    <div className="bg-white dark:bg-dark-700 rounded-lg shadow-sm border border-gray-200 dark:border-dark-600 overflow-hidden flex flex-col hover:shadow-md transition-shadow">
+      <div className="px-4 py-4 sm:px-6 border-b border-gray-200 dark:border-dark-600 bg-gray-50 dark:bg-dark-800">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <div className={`w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-md ${
               isWindows 
-                ? "bg-blue-100 text-black" 
-                : "bg-purple-100 text-black"
+                ? "bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400" 
+                : "bg-secondary-100 dark:bg-secondary-900/50 text-secondary-600 dark:text-secondary-400"
             }`}>
               <FaTerminal />
             </div>
             <div className="ml-3">
-              <h3 className="text-base font-medium text-black">{script.title}</h3>
+              <h3 className="text-base font-medium text-gray-900 dark:text-white">{script.title}</h3>
               <span className={`inline-flex items-center px-2.5 py-0.5 mt-1 rounded-full text-xs font-medium ${
                 isWindows 
-                  ? "bg-blue-200 text-black" 
-                  : "bg-purple-200 text-black"
+                  ? "bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300" 
+                  : "bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300"
               }`}>
                 {isWindows ? <FaWindows className="mr-1" /> : <FaLinux className="mr-1" />}
                 {script.language}
@@ -55,39 +55,39 @@ export function ScriptCard({ script }: ScriptCardProps) {
             </div>
           </div>
           <div>
-            <span className="inline-flex items-center text-xs text-black">
+            <span className="inline-flex items-center text-xs text-gray-500 dark:text-gray-400">
               <i className="far fa-calendar-alt mr-1"></i> Added {formatDate(script.createdAt)}
             </span>
           </div>
         </div>
       </div>
       <div className="px-4 py-4 sm:px-6 flex-1 flex flex-col">
-        <p className="text-sm text-black flex-1">
+        <p className="text-sm text-gray-600 dark:text-gray-300 flex-1">
           {script.summary}
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
           {script.highlights.map((highlight, index) => (
             <span 
               key={index} 
-              className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-200 text-black border border-gray-300"
+              className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 dark:bg-dark-600 text-gray-800 dark:text-gray-200"
             >
               {highlight}
             </span>
           ))}
         </div>
-        <div className="mt-4 pt-4 border-t border-gray-300 flex justify-between items-center">
+        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-dark-600 flex justify-between items-center">
           <Link 
             href={`/scripts/${script.key}`}
-            className={`inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md shadow-sm ${
+            className={`inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white ${
               isWindows 
-                ? "bg-blue-500 hover:bg-blue-600 text-black" 
-                : "bg-purple-500 hover:bg-purple-600 text-black"
+                ? "bg-primary-600 hover:bg-primary-700 focus:ring-primary-500" 
+                : "bg-secondary-600 hover:bg-secondary-700 focus:ring-secondary-500"
             } focus:outline-none focus:ring-2 focus:ring-offset-2`}
           >
             View Script
           </Link>
           <button 
-            className="p-1.5 text-black hover:text-gray-800 rounded-md border border-gray-300" 
+            className="p-1.5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 rounded-md" 
             title="Copy script link"
             onClick={copyLink}
             aria-label="Copy script link"

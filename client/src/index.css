@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Apply dark mode to entire document */
+html.dark {
+  background-color: #121212;
+}
+
 /* Properly structured CSS with high-specificity selectors */
 :root {
   /* Core colors with proper contrast */

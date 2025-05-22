@@ -12,7 +12,6 @@ import NotFound from "@/pages/not-found";
 import { MainLayout } from "@/layouts/MainLayout";
 import { useEffect } from "react";
 import { logAgentAction } from "@/lib/logging";
-import { ThemeProvider } from "@/components/ThemeProvider";
 
 function Router() {
   return (
@@ -33,16 +32,14 @@ function App() {
   }, []);
 
   return (
-    <ThemeProvider>
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <Toaster />
-          <MainLayout>
-            <Router />
-          </MainLayout>
-        </TooltipProvider>
-      </QueryClientProvider>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <MainLayout>
+          <Router />
+        </MainLayout>
+      </TooltipProvider>
+    </QueryClientProvider>
   );
 }
 

@@ -7,7 +7,7 @@ interface MainLayoutProps {
 
 export function MainLayout({ children }: MainLayoutProps) {
   return (
-    <div className="font-sans antialiased transition-colors duration-200 min-h-screen flex flex-col bg-[hsl(var(--bg-primary))] text-[hsl(var(--text-primary))]">
+    <div className="font-sans antialiased min-h-screen flex flex-col bg-white">
       <Navbar />
       <main className="flex-1 py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
         {children}

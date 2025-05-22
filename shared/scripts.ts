@@ -1,6 +1,7 @@
 import { InsertScript, InsertScriptVersion } from "./schema";
 
 // Initial seed script data for the database
+// Only including PowerShell scripts for now until Bash script formatting issues are resolved
 export const seedScripts: {
   script: InsertScript;
   tags: string[];
@@ -469,6 +470,9 @@ This script resets Windows Update components when they become corrupted or stop 
       changes: "Added Event Log integration and improved error handling",
     }
   },
+];
+
+/* Bash script temporarily removed due to formatting issues 
   {
     script: {
       key: "SH-01",
@@ -479,7 +483,7 @@ This script resets Windows Update components when they become corrupted or stop 
 # Linux-DiskMonitor.sh
 # Monitors disk usage and alerts when thresholds are exceeded
 # Author: Linux Systems Team
-# Version: 1.3.0
+# Version: 1.0.0.3.0
 
 # Configuration variables
 THRESHOLD=85                             # Default alert threshold percentage
@@ -553,9 +557,9 @@ trap 'rm -f "$TMP_USAGE" "$TMP_EMAIL"; log_message "INFO" "Finished disk usage c
 # Create exclude pattern for grep
 EXCLUDE_PATTERN=""
 for mount in $EXCLUDE_LIST; do
-  EXCLUDE_PATTERN="${EXCLUDE_PATTERN:-}|^${mount}"
+  EXCLUDE_PATTERN="${EXCLUDE_PATTERN}|^${mount}"
 done
-EXCLUDE_PATTERN=${EXCLUDE_PATTERN#|}
+EXCLUDE_PATTERN=$(echo $EXCLUDE_PATTERN | sed 's/^|//')
 
 # Get disk usage and filter out excluded filesystems
 if [ -n "$EXCLUDE_PATTERN" ]; then
@@ -810,7 +814,7 @@ escape_json_string() {
   local s="$1"
   s="${s//\\/\\\\}"  # Escape backslashes
   s="${s//\"/\\\"}"  # Escape double quotes
-  s="${s//	/\\t}"    # Escape tabs
+  s="${s//      /\\t}"    # Escape tabs
   s="${s//\n/\\n}"   # Escape newlines
   s="${s//\r/\\r}"   # Escape carriage returns
   echo "$s"

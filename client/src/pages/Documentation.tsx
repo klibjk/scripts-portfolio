@@ -30,7 +30,7 @@ export default function Documentation() {
               reliability in production environments.
             </p>
             <p>
-              This tool was created to showcase scripting skills relevant to the NinjaOne "Systems 
+              This tool was created to showcase scripting skills relevant to David Povis' "Systems 
               Engineer – Product Scripting" role, demonstrating expertise in Windows and Linux 
               automation.
             </p>

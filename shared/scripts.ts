@@ -405,5 +405,143 @@ Performs checks for several common security baseline settings to help administra
       version: "1.0.0",
       changes: "Initial release with security baseline checks for Linux and macOS",
     }
+  },
+  {
+    script: {
+      key: "PS-02",
+      language: "PowerShell",
+      title: "Security-Baseline-Check.ps1",
+      summary: "PowerShell script to verify Windows security configurations and compliance with security best practices.",
+      code: `# Script to check some basic Windows security baseline settings
+
+Write-Host "--------------------------------------------------"
+Write-Host "Security Baseline Check - $(Get-Date)"
+Write-Host "--------------------------------------------------"
+
+# --- Check Windows Firewall Status (Domain, Private, Public profiles) ---
+Write-Host "\`n--- Windows Firewall Status ---"
+$FirewallProfiles = Get-NetFirewallProfile -Profile Domain, Private, Public | Select-Object Name, Enabled
+foreach ($Profile in $FirewallProfiles) {
+    if ($Profile.Enabled) {
+        Write-Host "OK: $($Profile.Name) Firewall Profile is Enabled."
+    } else {
+        Write-Host "WARNING: $($Profile.Name) Firewall Profile is Disabled. Consider enabling it."
+    }
+}
+
+# --- Check if UAC (User Account Control) is enabled ---
+Write-Host "\`n--- User Account Control (UAC) Status ---"
+$UACEnabled = (Get-ItemProperty -Path "HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" -Name "EnableLUA").EnableLUA
+if ($UACEnabled -eq 1) {
+    Write-Host "OK: User Account Control (UAC) is Enabled."
+} else {
+    Write-Host "WARNING: User Account Control (UAC) is Disabled. This is a security risk."
+}
+
+# --- Check for Automatic Updates ---
+Write-Host "\`n--- Automatic Updates Status ---"
+try {
+    $AUService = Get-Service wuauserv
+    $AUManager = New-Object -ComObject "Microsoft.Update.AutoUpdate"
+    if ($AUService.Status -ne "Running") {
+        Write-Host "WARNING: Windows Update service (wuauserv) is not running."
+    }
+    if ($AUManager.Settings.NotificationLevel -lt 3) { # 2 = Notify for download and install, 3 = Auto download and notify for install, 4 = Auto download and schedule install
+        Write-Host "WARNING: Automatic Updates may not be fully enabled (NotificationLevel: $($AUManager.Settings.NotificationLevel)). Review Group Policy or Settings."
+    } else {
+        Write-Host "OK: Automatic Updates appear to be configured to download and/or install."
+    }
+} catch {
+    Write-Host "INFO: Could not retrieve full Automatic Update settings (COM object error or service issue)."
+}
+
+# --- Check for Antivirus Status (via Security Center) ---
+Write-Host "\`n--- Antivirus Status ---"
+try {
+    $AntivirusProduct = Get-CimInstance -Namespace root\\SecurityCenter2 -ClassName AntiVirusProduct
+    if ($AntivirusProduct) {
+        foreach ($AV in $AntivirusProduct) {
+            $AVStatus = switch ($AV.productState) {
+                "262144" { "Up to date, Disabled" }
+                "262160" { "Out of date, Disabled" }
+                "266240" { "Up to date, Enabled" } # Good
+                "266256" { "Out of date, Enabled" } # Not good
+                "393216" { "Up to date, Disabled" }
+                "393232" { "Out of date, Disabled" }
+                "393472" { "N/A, Snoozed" }
+                "393488" { "N/A, Snoozed" }
+                "397312" { "Up to date, Enabled" } # Good
+                "397328" { "Out of date, Enabled" } # Not good
+                "397568" { "Up to date, Snoozed" }
+                "397584" { "Out of date, Snoozed" }
+                default { "Unknown state: $($AV.productState)" }
+            }
+            Write-Host "Product: $($AV.displayName)"
+            if ($AV.productState -eq "266240" -or $AV.productState -eq "397312") {
+                 Write-Host "Status: OK - Enabled and Up to Date."
+            } elseif ($AV.productState -eq "266256" -or $AV.productState -eq "397328") {
+                 Write-Host "Status: WARNING - Enabled but Out of Date."
+            } else {
+                 Write-Host "Status: WARNING - $AVStatus. Action may be required."
+            }
+        }
+    } else {
+        Write-Host "WARNING: No Antivirus product detected via WMI SecurityCenter2."
+    }
+} catch {
+    Write-Host "INFO: Could not query Antivirus status via WMI SecurityCenter2. Ensure the service is running or try another method."
+}
+
+# --- Check BitLocker Encryption Status for OS Drive ---
+Write-Host "\`n--- BitLocker Status (OS Drive) ---"
+try {
+    $OSVolume = Get-BitLockerVolume -MountPoint $env:SystemDrive
+    if ($OSVolume.ProtectionStatus -eq "On") {
+        Write-Host "OK: BitLocker is ON for the OS Drive ($($env:SystemDrive)). Status: $($OSVolume.VolumeStatus)"
+    } else {
+        Write-Host "WARNING: BitLocker is OFF for the OS Drive ($($env:SystemDrive)). Protection Status: $($OSVolume.ProtectionStatus)"
+    }
+} catch {
+    Write-Host "INFO: Could not retrieve BitLocker status for $($env:SystemDrive). Ensure BitLocker cmdlets are available or BitLocker is installed."
+}
+
+Write-Host "\`n--------------------------------------------------"
+Write-Host "Security Baseline Check Complete. Review findings."
+Write-Host "--------------------------------------------------"`,
+      readme: `# Security Baseline Checker Script - PowerShell Version
+
+PowerShell script to verify Windows security configurations and compliance with security best practices.
+
+## Purpose
+Checks several common security baseline settings on Windows systems to verify essential security configurations are in place.
+
+## Compatibility
+- Windows 10, Windows 11
+- Windows Server 2016, 2019, 2022
+
+## Usage
+1. Save as Security-BaselineCheck.ps1
+2. Open PowerShell as Administrator
+3. Run: .\\Security-BaselineCheck.ps1
+
+## Checks Performed
+- Windows Firewall status for all profiles
+- User Account Control (UAC) status
+- Automatic Updates configuration
+- Antivirus product status via WMI
+- BitLocker Drive Encryption status`,
+      author: "David Povis",
+      version: "1.0.0",
+      compatibleOS: "Windows 10, Windows 11, Windows Server 2016+",
+      requiredModules: "None (uses built-in cmdlets)",
+      dependencies: "PowerShell 5.1+, Administrator privileges recommended",
+      license: "MIT",
+    },
+    tags: ["Security", "Windows", "Firewall", "UAC", "BitLocker", "Antivirus"],
+    highlights: ["Security Audit", "WMI Integration", "Comprehensive Checks"],
+    version: {
+      version: "1.0.0",
+      changes: "Initial release with Windows security baseline checks",
+    }
   }
 ];

@@ -68,34 +68,76 @@ fi
 echo -e "\\n--------------------------------------------------"
 echo "Health Check Complete."
 echo "--------------------------------------------------"`,
-      readme: `# System Information & Health Check Script Documentation
+      readme: `# Documentation: System Information & Health Check Script
 
-This script provides a quick overview of system status, gathering essential hardware and software information along with basic health metrics.
+This script is designed to provide a quick overview of a system's current status, gathering essential hardware and software information along with basic health metrics. It's a foundational tool for IT professionals and Managed Service Providers (MSPs) to perform initial assessments or routine checks on endpoints.
 
-## Purpose
-Gathers key system information and performs basic health checks on Linux and macOS systems for troubleshooting, inventory, and routine monitoring.
+## System Information & Health Check - Bash Version
 
-## Compatibility
-- Linux (Debian/Ubuntu, RHEL/CentOS)
+### Purpose:
+This Bash script gathers key system information and performs basic health checks on Linux and macOS systems. It is designed to provide a quick snapshot of the machine's configuration and current operational status, useful for troubleshooting, inventory, and routine monitoring.
+
+### Operating System Compatibility:
+- Linux (tested on Debian/Ubuntu-based systems, RHEL/CentOS-based systems)
 - macOS
 
-## Usage
-1. Save as system_health_check.sh
-2. Make executable: chmod +x system_health_check.sh
-3. Run: ./system_health_check.sh
+### Prerequisites:
+- Standard Unix/Linux command-line utilities (e.g., uname, hostname, uptime, ps, free, df, ip, ss, dmesg, sw_vers, vm_stat, ifconfig, route, perl). Most are pre-installed on target systems.
+- perl is used for a specific memory calculation on macOS; if not available, that specific metric might not display.
 
-## Output
-- Operating System details
-- Hostname and uptime
-- Top 5 CPU processes
-- Memory usage
-- Disk usage
-- Network configuration
-- Recent system errors (Linux only)`,
+### Usage:
+1. Save the script to a file (e.g., system_health_check.sh).
+2. Make the script executable: chmod +x system_health_check.sh
+3. Run the script: ./system_health_check.sh
+
+Some commands for specific information (like dmesg for recent errors on Linux) might produce more detailed output if run with sudo ./system_health_check.sh, but the script is generally designed to run as a standard user.
+
+### Output:
+The script outputs formatted information to the console, including:
+
+- Operating System details (name, version)
+- Hostname and system uptime
+- Top 5 CPU-consuming processes
+- Memory usage (total, used, free)
+- Disk usage for the root filesystem
+- Network configuration for the primary interface
+- (Linux only) Recent system errors from dmesg (if any)
+
+### Example Snippet of Output (will vary by system):
+
+\`\`\`
+--------------------------------------------------
+System Health Check - Thu May 22 13:58:20 EDT 2025
+--------------------------------------------------
+
+--- Operating System ---
+PRETTY_NAME="Ubuntu 22.04.3 LTS"
+
+--- Hostname & Uptime ---
+my-linux-server
+ 13:58:20 up 10 days,  2:17,  1 user,  load average: 0.05, 0.15, 0.10
+
+--- CPU Usage (Top 5 processes) ---
+%CPU   PID USER     COMMAND
+ 0.5  1234 myuser   /usr/bin/some_process -arg
+ 0.2   876 root     /usr/sbin/another_daemon
+...
+
+--- Memory Usage ---
+              total        used        free      shared  buff/cache   available
+Mem:          7.7Gi       1.2Gi       5.8Gi        12Mi       800Mi       6.3Gi
+Swap:         2.0Gi          0B       2.0Gi
+...
+\`\`\`
+
+### Notes:
+- The accuracy and availability of some metrics (like specific memory stats on macOS or network interface detection) can vary slightly between OS versions and configurations.
+- This script provides a baseline; it can be extended to gather more specific information (e.g., specific application versions, running services, detailed hardware inventory).
+- For continuous monitoring, this script could be scheduled as a cron job, with output redirected to a file or a monitoring system.`,
       author: "David Povis",
       version: "1.0.0",
       compatibleOS: "Linux (All distributions), macOS",
-      requiredModules: "Standard Unix utilities",
+      requiredModules: "Standard Unix utilities, perl (for macOS memory calculation)",
       dependencies: "None",
       license: "MIT",
     },
@@ -151,37 +193,89 @@ Get-PSDrive C | Select-Object Name, @{Name="Size (GB)";Expression={[math]::Round
 Write-Host "\`n--- Network Configuration (Primary Interface) ---"
 Get-NetAdapter -Physical | Where-Object {$_.Status -eq "Up"} | Get-NetIPConfiguration | Select-Object InterfaceAlias, IPv4Address, IPv4DefaultGateway, DNSServer | Format-Table -AutoSize
 
-# --- Check for recent system errors ---
+# --- Check for recent system errors (Event Log - System, last 5 errors) ---
 Write-Host "\`n--- Recent System Errors (Last 5 from System Event Log) ---"
 Get-WinEvent -LogName System -MaxEvents 50 | Where-Object {$_.LevelDisplayName -eq "Error"} | Select-Object -First 5 TimeCreated, ID, Message | Format-Table -AutoSize
+
 
 Write-Host "\`n--------------------------------------------------"
 Write-Host "Health Check Complete."
 Write-Host "--------------------------------------------------"`,
-      readme: `# System Information & Health Check Script Documentation
+      readme: `# Documentation: System Information & Health Check Script
 
-PowerShell script for gathering system information and health metrics on Windows systems.
+This script is designed to provide a quick overview of a system's current status, gathering essential hardware and software information along with basic health metrics. It's a foundational tool for IT professionals and system administrators to perform initial assessments or routine checks on endpoints.
 
-## Purpose
-Provides a quick snapshot of Windows machine configuration and operational status for troubleshooting and monitoring.
+## System Information & Health Check - PowerShell Version
 
-## Compatibility
+### Purpose:
+This PowerShell script gathers key system information and performs basic health checks on Windows systems. It is designed to provide a quick snapshot of the machine's configuration and current operational status, useful for troubleshooting, inventory, and routine monitoring.
+
+### Operating System Compatibility:
 - Windows 10, Windows 11
-- Windows Server 2016+
+- Windows Server 2016 and newer
 
-## Usage
-1. Save as System-Health-Check.ps1
-2. Run in PowerShell: .\\System-Health-Check.ps1
-3. Run as Administrator for full access
+### Prerequisites:
+- PowerShell 5.1 or higher (comes pre-installed on Windows 10 and newer)
+- Administrative privileges for certain metrics (Event Log access, detailed system information)
 
-## Output
-- Operating System details
-- Hostname and uptime
-- Top 5 CPU processes
-- Memory usage statistics
-- Disk usage for C: drive
-- Network configuration
-- Recent system errors from Event Log`,
+### Usage:
+1. Save the script to a file (e.g., System-Health-Check.ps1).
+2. Run the script in a PowerShell console:
+   - Regular execution: .\System-Health-Check.ps1
+   - For full access to all system information: Run PowerShell as Administrator, then execute the script
+
+### Output:
+The script outputs formatted information to the console, including:
+
+- Operating System details (Windows version and architecture)
+- Hostname and system uptime
+- Top 5 CPU-consuming processes
+- Memory usage statistics (total, used, free)
+- Disk usage for the C: drive
+- Network configuration for connected adapters
+- Recent system errors from the Windows Event Log
+
+### Example Snippet of Output (will vary by system):
+
+\`\`\`
+--------------------------------------------------
+System Health Check - 05/22/2025 14:10:22
+--------------------------------------------------
+
+--- Operating System ---
+WindowsProductName       WindowsVersion OsArchitecture
+------------------       -------------- --------------
+Windows 10 Pro           21H2           64-bit        
+
+--- Hostname & Uptime ---
+Hostname: WORKSTATION-PC
+Uptime: 5 days, 8 hours, 42 minutes
+
+--- CPU Usage (Top 5 processes) ---
+Name                        CPU    Id
+----                        ---    --
+Chrome                     243.12  4572
+Teams                      147.85  2680
+Code                        80.33  1520
+Outlook                     42.76  3450
+Explorer                    12.55  1640
+
+--- Memory Usage ---
+Total Memory: 15.94 GB
+Used Memory: 8.56 GB
+Free Memory: 7.38 GB (46.3%)
+
+--- Disk Usage (C: Drive) ---
+Name Size (GB) FreeSpace (GB) PercentFree
+---- --------- -------------- -----------
+C       465.76         128.35       27.56
+\`\`\`
+
+### Notes:
+- Some commands might require administrative privileges to show complete information
+- The script is non-invasive and only collects information without making any system changes
+- This script provides a baseline; it can be extended to gather more specific information (e.g., specific application versions, services, detailed hardware inventory)
+- For continuous monitoring, this script could be scheduled as a task to run periodically`,
       author: "David Povis",
       version: "1.0.0",
       compatibleOS: "Windows 10, Windows 11, Windows Server 2016+",
@@ -194,447 +288,6 @@ Provides a quick snapshot of Windows machine configuration and operational statu
     version: {
       version: "1.0.0",
       changes: "Initial release with support for Windows systems",
-    }
-  },
-  {
-    script: {
-      key: "SH-02",
-      language: "Bash",
-      title: "Security-Baseline-Check.sh",
-      summary: "Checks basic security configurations on Linux/macOS systems for compliance with security best practices.",
-      code: `#!/bin/bash
-
-# Script to check some basic security baseline settings
-
-echo "--------------------------------------------------"
-echo "Security Baseline Check - $(date)"
-echo "--------------------------------------------------"
-
-# --- Check if UFW (Uncomplicated Firewall) is active (Linux specific) ---
-if [[ "$(uname)" == "Linux" ]] && command -v ufw &> /dev/null; then
-    echo -e "\\n--- Firewall (UFW) Status ---"
-    ufw_status=$(sudo ufw status | head -n 1)
-    if [[ "$ufw_status" == "Status: active" ]]; then
-        echo "OK: UFW is active."
-    else
-        echo "WARNING: UFW is inactive. Consider enabling it: sudo ufw enable"
-    fi
-elif [[ "$(uname)" == "Darwin" ]]; then
-    echo -e "\\n--- Firewall (pf) Status ---"
-    pf_status=$(sudo pfctl -s info | grep "Status:" | awk '{print $2}')
-    if [[ "$pf_status" == "Enabled" ]]; then
-        echo "OK: macOS Packet Filter (pf) is enabled."
-    else
-        echo "WARNING: macOS Packet Filter (pf) is disabled."
-    fi
-else
-    echo -e "\\n--- Firewall Status ---"
-    echo "INFO: Firewall check skipped (unsupported OS or tool not found)."
-fi
-
-# --- Check for listening SSH port ---
-echo -e "\\n--- SSH Port Status ---"
-if ss -tulnp | grep ':22' | grep -q 'LISTEN'; then
-    echo "OK: SSH daemon appears to be listening on port 22."
-elif nc -z localhost 22; then
-     echo "OK: SSH daemon appears to be listening on port 22."
-else
-    echo "INFO: SSH daemon not listening on port 22, or port is firewalled."
-fi
-
-# --- Check for passwordless sudo ---
-echo -e "\\n--- Passwordless Sudo Check ---"
-if sudo -nl | grep -q '(ALL) NOPASSWD: ALL'; then
-    echo "WARNING: Found user(s) with passwordless sudo access."
-else
-    echo "OK: No global passwordless sudo found (basic check)."
-fi
-
-# --- macOS Specific: Gatekeeper Status ---
-if [[ "$(uname)" == "Darwin" ]]; then
-    echo -e "\\n--- macOS Gatekeeper Status ---"
-    gatekeeper_status=$(spctl --status)
-    if [[ "$gatekeeper_status" == "assessments enabled" ]]; then
-        echo "OK: Gatekeeper is enabled."
-    else
-        echo "WARNING: Gatekeeper is disabled."
-    fi
-fi
-
-# --- macOS Specific: FileVault Status ---
-if [[ "$(uname)" == "Darwin" ]]; then
-    echo -e "\\n--- macOS FileVault Status ---"
-    filevault_status=$(fdesetup status)
-    if [[ "$filevault_status" == "FileVault is On."* ]]; then
-        echo "OK: FileVault is On."
-    else
-        echo "WARNING: FileVault is Off. Consider enabling for full disk encryption."
-    fi
-fi
-
-echo -e "\\n--------------------------------------------------"
-echo "Security Baseline Check Complete. Review findings."
-echo "--------------------------------------------------"`,
-      readme: `# Security Baseline Checker Script Documentation
-
-Verifies common security configurations on Linux and macOS systems to ensure adherence to basic security best practices.
-
-## Purpose
-Performs checks for several common security baseline settings to help administrators identify potential security configuration issues.
-
-## Compatibility
-- Linux (Debian/Ubuntu, RHEL/CentOS)
-- macOS
-
-## Usage
-1. Save as security_baseline_check.sh
-2. Make executable: chmod +x security_baseline_check.sh
-3. Run with sudo: sudo ./security_baseline_check.sh
-
-## Checks Performed
-- Firewall status (UFW on Linux, pf on macOS)
-- SSH port listening status
-- Passwordless sudo configurations
-- macOS Gatekeeper status
-- macOS FileVault encryption status`,
-      author: "David Povis",
-      version: "1.0.0",
-      compatibleOS: "Linux (All distributions), macOS",
-      requiredModules: "Standard Unix utilities, ufw (Linux), pfctl (macOS)",
-      dependencies: "sudo access for comprehensive checks",
-      license: "MIT",
-    },
-    tags: ["Security", "Baseline", "Firewall", "SSH", "Linux", "macOS"],
-    highlights: ["Security Audit", "Cross-Platform", "Configurable Checks"],
-    version: {
-      version: "1.0.0",
-      changes: "Initial release with security baseline checks for Linux and macOS",
-    }
-  },
-  {
-    script: {
-      key: "PS-02",
-      language: "PowerShell",
-      title: "Security-Baseline-Check.ps1",
-      summary: "PowerShell script to verify Windows security configurations and compliance with security best practices.",
-      code: `# Script to check some basic Windows security baseline settings
-
-Write-Host "--------------------------------------------------"
-Write-Host "Security Baseline Check - $(Get-Date)"
-Write-Host "--------------------------------------------------"
-
-# --- Check Windows Firewall Status ---
-Write-Host "\`n--- Windows Firewall Status ---"
-$FirewallProfiles = Get-NetFirewallProfile -Profile Domain, Private, Public | Select-Object Name, Enabled
-foreach ($Profile in $FirewallProfiles) {
-    if ($Profile.Enabled) {
-        Write-Host "OK: $($Profile.Name) Firewall Profile is Enabled."
-    } else {
-        Write-Host "WARNING: $($Profile.Name) Firewall Profile is Disabled."
-    }
-}
-
-# --- Check if UAC is enabled ---
-Write-Host "\`n--- User Account Control (UAC) Status ---"
-$UACEnabled = (Get-ItemProperty -Path "HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" -Name "EnableLUA").EnableLUA
-if ($UACEnabled -eq 1) {
-    Write-Host "OK: User Account Control (UAC) is Enabled."
-} else {
-    Write-Host "WARNING: User Account Control (UAC) is Disabled."
-}
-
-# --- Check for Automatic Updates ---
-Write-Host "\`n--- Automatic Updates Status ---"
-try {
-    $AUService = Get-Service wuauserv
-    if ($AUService.Status -eq "Running") {
-        Write-Host "OK: Windows Update service is running."
-    } else {
-        Write-Host "WARNING: Windows Update service is not running."
-    }
-} catch {
-    Write-Host "INFO: Could not retrieve Windows Update service status."
-}
-
-# --- Check for Antivirus Status ---
-Write-Host "\`n--- Antivirus Status ---"
-try {
-    $AntivirusProduct = Get-CimInstance -Namespace root\\SecurityCenter2 -ClassName AntiVirusProduct
-    if ($AntivirusProduct) {
-        foreach ($AV in $AntivirusProduct) {
-            Write-Host "Product: $($AV.displayName)"
-            if ($AV.productState -eq "266240" -or $AV.productState -eq "397312") {
-                 Write-Host "Status: OK - Enabled and Up to Date."
-            } else {
-                 Write-Host "Status: WARNING - May require attention."
-            }
-        }
-    } else {
-        Write-Host "WARNING: No Antivirus product detected."
-    }
-} catch {
-    Write-Host "INFO: Could not query Antivirus status."
-}
-
-# --- Check BitLocker Status ---
-Write-Host "\`n--- BitLocker Status (OS Drive) ---"
-try {
-    $OSVolume = Get-BitLockerVolume -MountPoint $env:SystemDrive
-    if ($OSVolume.ProtectionStatus -eq "On") {
-        Write-Host "OK: BitLocker is ON for the OS Drive ($($env:SystemDrive))."
-    } else {
-        Write-Host "WARNING: BitLocker is OFF for the OS Drive ($($env:SystemDrive))."
-    }
-} catch {
-    Write-Host "INFO: Could not retrieve BitLocker status."
-}
-
-Write-Host "\`n--------------------------------------------------"
-Write-Host "Security Baseline Check Complete. Review findings."
-Write-Host "--------------------------------------------------"`,
-      readme: `# Security Baseline Checker Script Documentation
-
-PowerShell script to verify Windows security configurations and compliance with security best practices.
-
-## Purpose
-Checks several common security baseline settings on Windows systems to verify essential security configurations are in place.
-
-## Compatibility
-- Windows 10, Windows 11
-- Windows Server 2016, 2019, 2022
-
-## Usage
-1. Save as Security-BaselineCheck.ps1
-2. Open PowerShell as Administrator
-3. Run: .\\Security-BaselineCheck.ps1
-
-## Checks Performed
-- Windows Firewall status for all profiles
-- User Account Control (UAC) status
-- Automatic Updates configuration
-- Antivirus product status
-- BitLocker Drive Encryption status`,
-      author: "David Povis",
-      version: "1.0.0",
-      compatibleOS: "Windows 10, Windows 11, Windows Server 2016+",
-      requiredModules: "None (uses built-in cmdlets)",
-      dependencies: "PowerShell 5.1+, Administrator privileges recommended",
-      license: "MIT",
-    },
-    tags: ["Security", "Windows", "Firewall", "UAC", "BitLocker", "Antivirus"],
-    highlights: ["Security Audit", "WMI Integration", "Comprehensive Checks"],
-    version: {
-      version: "1.0.0",
-      changes: "Initial release with Windows security baseline checks",
-    }
-  },
-  {
-    script: {
-      key: "SH-03",
-      language: "Bash",
-      title: "Failed-Login-Monitor.sh",
-      summary: "Monitors Linux authentication logs for failed login attempts and alerts on suspicious activity.",
-      code: `#!/bin/bash
-
-# Simple log watcher for failed SSH login attempts
-
-# --- Configuration ---
-LOG_FILE=""
-if [ -f "/var/log/auth.log" ]; then
-    LOG_FILE="/var/log/auth.log"
-elif [ -f "/var/log/secure" ]; then
-    LOG_FILE="/var/log/secure"
-else
-    echo "WARNING: Could not find authentication log file. Exiting."
-    exit 1
-fi
-
-SEARCH_PATTERN="Failed password for"
-TIME_WINDOW_MINUTES=5
-FAILED_ATTEMPT_THRESHOLD=3
-
-echo "--------------------------------------------------"
-echo "Failed Login Attempt Monitor - $(date)"
-echo "Monitoring log: $LOG_FILE"
-echo "Alert threshold: $FAILED_ATTEMPT_THRESHOLD failed attempts in $TIME_WINDOW_MINUTES minutes."
-echo "--------------------------------------------------"
-
-# --- Get time window ---
-current_epoch=$(date +%s)
-past_epoch=$(date -d "$TIME_WINDOW_MINUTES minutes ago" +%s 2>/dev/null || date -v-${TIME_WINDOW_MINUTES}M +%s)
-
-# --- Parse log entries ---
-failed_attempts=0
-declare -a offending_ips
-
-while IFS= read -r line; do
-    log_timestamp_str=$(echo "$line" | awk '{print $1 " " $2 " " $3}')
-    log_epoch=$(date -d "$log_timestamp_str" +%s 2>/dev/null)
-
-    if [[ -n "$log_epoch" ]] && [[ "$log_epoch" -ge "$past_epoch" ]]; then
-        failed_attempts=$((failed_attempts + 1))
-        ip_address=$(echo "$line" | grep -o '[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}' | head -1)
-        if [[ -n "$ip_address" ]]; then
-            offending_ips+=("$ip_address")
-        fi
-    fi
-done < <(sudo grep "$SEARCH_PATTERN" "$LOG_FILE" 2>/dev/null || true)
-
-# --- Output Results ---
-echo -e "\\n--- Results for the last $TIME_WINDOW_MINUTES minutes ---"
-if (offending_ips.length > 0) {
-    echo `Potential source IPs: ${offending_ips.join(' ')}`
-    fi
-    echo "Consider checking the log file for details."
-else
-    echo "OK: No significant failed login activity detected (found $failed_attempts attempts)."
-fi
-
-echo -e "\\n--------------------------------------------------"
-echo "Monitoring Complete."
-echo "--------------------------------------------------"`,
-      readme: `# Failed Login Attempt Monitor Script Documentation
-
-Monitors Linux authentication logs for failed login attempts and provides alerts on suspicious activity.
-
-## Purpose
-Provides basic monitoring of authentication logs for failed SSH login attempts to identify potential brute-force attacks.
-
-## Compatibility
-- Linux (Debian/Ubuntu, RHEL/CentOS/Fedora)
-
-## Usage
-1. Save as log_watcher_ssh.sh
-2. Make executable: chmod +x log_watcher_ssh.sh
-3. Run with sudo: sudo ./log_watcher_ssh.sh
-
-## Configuration
-- TIME_WINDOW_MINUTES: How far back to check (default: 5 minutes)
-- FAILED_ATTEMPT_THRESHOLD: Alert threshold (default: 3 attempts)
-- Automatically detects auth.log or secure log files
-
-## Features
-- Configurable time window and threshold
-- IP address extraction from log entries
-- Cross-platform date handling (GNU/BSD)`,
-      author: "David Povis",
-      version: "1.0.0",
-      compatibleOS: "Linux (All distributions)",
-      requiredModules: "Standard Unix utilities",
-      dependencies: "sudo access for reading auth logs",
-      license: "MIT",
-    },
-    tags: ["Security", "Monitoring", "SSH", "Log Analysis", "Linux"],
-    highlights: ["Real-time Monitoring", "IP Extraction", "Configurable Thresholds"],
-    version: {
-      version: "1.0.0",
-      changes: "Initial release with failed login monitoring for Linux systems",
-    }
-  },
-  {
-    script: {
-      key: "PS-03",
-      language: "PowerShell",
-      title: "Failed-Login-Monitor.ps1",
-      summary: "PowerShell script to monitor Windows Security Event Log for failed login attempts and security alerts.",
-      code: `<#
-.SYNOPSIS
-    Monitors Windows Security Event Log for failed login attempts (Event ID 4625).
-.DESCRIPTION
-    Queries the Security event log for failed logon events within a specified time window
-    and alerts if the number exceeds a threshold.
-.NOTES
-    Author: David Povis
-    Requires Administrator privileges to read the Security Event Log.
-#>
-
-[CmdletBinding()]
-param (
-    [int]$TimeWindowMinutes = 15,
-    [int]$FailedAttemptThreshold = 5
-)
-
-Write-Host "--------------------------------------------------"
-Write-Host "Failed Login Attempt Monitor (Event ID 4625) - $(Get-Date)"
-Write-Host "Monitoring Security Event Log."
-Write-Host "Alert threshold: $FailedAttemptThreshold failed attempts in $TimeWindowMinutes minutes."
-Write-Host "--------------------------------------------------"
-
-# --- Calculate start time ---
-$StartTime = (Get-Date).AddMinutes(-$TimeWindowMinutes)
-
-# --- Query Security Event Log ---
-Write-Host "Querying events since $StartTime..."
-try {
-    $FailedLogins = Get-WinEvent -FilterHashtable @{
-        LogName   = 'Security'
-        ID        = 4625
-        StartTime = $StartTime
-    } -ErrorAction Stop
-
-    $FailedLoginCount = ($FailedLogins | Measure-Object).Count
-
-    # --- Output Results ---
-    Write-Host "\`n--- Results for the last $TimeWindowMinutes minutes ---"
-    if ($FailedLoginCount -ge $FailedAttemptThreshold) {
-        Write-Warning "ALERT: $FailedLoginCount failed login attempts (Event ID 4625) detected!"
-
-        Write-Host "Details of failed attempts:"
-        $FailedLogins | Select-Object -First 10 TimeCreated, \`
-            @{Name='TargetUserName';Expression={$_.Properties[5].Value}}, \`
-            @{Name='WorkstationName';Expression={$_.Properties[11].Value}}, \`
-            @{Name='SourceIP';Expression={$_.Properties[19].Value}}, \`
-            @{Name='LogonType';Expression={$_.Properties[8].Value}} | Format-Table -AutoSize
-
-        Write-Host "Consider investigating these attempts."
-    } else {
-        Write-Host "OK: No significant failed login activity detected (found $FailedLoginCount attempts)."
-    }
-
-} catch {
-    Write-Error "Error querying Security Event Log: $($_.Exception.Message)"
-    Write-Host "Please ensure you are running this script with Administrator privileges."
-}
-
-Write-Host "\`n--------------------------------------------------"
-Write-Host "Monitoring Complete."
-Write-Host "--------------------------------------------------"`,
-      readme: `# Failed Login Attempt Monitor Script Documentation
-
-PowerShell script to monitor Windows Security Event Log for failed login attempts and provide security alerts.
-
-## Purpose
-Monitors Windows Security Event Log for Event ID 4625 (failed logon attempts) to provide early warning of potential brute-force attacks.
-
-## Compatibility
-- Windows 10, Windows 11
-- Windows Server 2016, 2019, 2022
-
-## Usage
-1. Save as Watch-FailedLogins.ps1
-2. Open PowerShell as Administrator
-3. Run: .\\Watch-FailedLogins.ps1
-4. Custom parameters: .\\Watch-FailedLogins.ps1 -TimeWindowMinutes 10 -FailedAttemptThreshold 3
-
-## Parameters
-- TimeWindowMinutes: How far back to check (default: 15 minutes)
-- FailedAttemptThreshold: Alert threshold (default: 5 attempts)
-
-## Requirements
-- Administrator privileges for Security Event Log access
-- Audit policies enabled for logon events`,
-      author: "David Povis",
-      version: "1.0.0",
-      compatibleOS: "Windows 10, Windows 11, Windows Server 2016+",
-      requiredModules: "None (uses built-in cmdlets)",
-      dependencies: "PowerShell 5.1+, Administrator privileges, Audit policies enabled",
-      license: "MIT",
-    },
-    tags: ["Security", "Windows", "Event Log", "Login Monitoring", "Threat Detection"],
-    highlights: ["Event Log Analysis", "Configurable Parameters", "Detailed Reporting"],
-    version: {
-      version: "1.0.0",
-      changes: "Initial release with Windows failed login monitoring",
     }
   }
 ];

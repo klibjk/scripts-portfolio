@@ -690,5 +690,129 @@ This is a basic example for demonstration. For production environments, consider
       version: "1.0.0",
       changes: "Initial release with SSH failed login monitoring",
     }
+  },
+  {
+    script: {
+      key: "PS-03",
+      language: "PowerShell",
+      title: "Failed-Login-Monitor.ps1",
+      summary: "PowerShell script that monitors the Windows Security Event Log for failed login attempts (Event ID 4625) and alerts when threshold is exceeded.",
+      code: `<#
+.SYNOPSIS
+    Monitors the Windows Security Event Log for multiple failed login attempts (Event ID 4625).
+.DESCRIPTION
+    This script queries the Security event log for Event ID 4625 (An account failed to log on)
+    within a specified time window. If the number of failed attempts exceeds a threshold,
+    it outputs an alert.
+.NOTES
+    Author: David Povis
+    Date: $(Get-Date)
+    Requires Administrator privileges to read the Security Event Log.
+#>
+
+[CmdletBinding()]
+param (
+    [int]$TimeWindowMinutes = 15, # Check for attempts in the last X minutes
+    [int]$FailedAttemptThreshold = 5 # Alert if more than X attempts
+)
+
+Write-Host "--------------------------------------------------"
+Write-Host "Failed Login Attempt Monitor (Event ID 4625) - $(Get-Date)"
+Write-Host "Monitoring Security Event Log."
+Write-Host "Alert threshold: $FailedAttemptThreshold failed attempts in $TimeWindowMinutes minutes."
+Write-Host "--------------------------------------------------"
+
+# --- Calculate the start time for the event log query ---
+$StartTime = (Get-Date).AddMinutes(-$TimeWindowMinutes)
+
+# --- Query the Security Event Log ---
+Write-Host "Querying events since $StartTime..."
+try {
+    $FailedLogins = Get-WinEvent -FilterHashtable @{
+        LogName   = 'Security'
+        ID        = 4625 # Event ID for "An account failed to log on"
+        StartTime = $StartTime
+    } -ErrorAction Stop
+
+    $FailedLoginCount = ($FailedLogins | Measure-Object).Count
+
+    # --- Output Results ---
+    Write-Host "\`n--- Results for the last $TimeWindowMinutes minutes ---"
+    if ($FailedLoginCount -ge $FailedAttemptThreshold) {
+        Write-Warning "ALERT: $FailedLoginCount failed login attempts (Event ID 4625) detected!" # Write-Warning itself is fine
+
+        # Display details of the failed logins
+        Write-Host "Details of failed attempts:"
+        $FailedLogins | Select-Object -First 10 TimeCreated, \`
+            @{Name='TargetUserName';Expression={$_.Properties[5].Value}}, \`
+            @{Name='WorkstationName';Expression={$_.Properties[11].Value}}, \`
+            @{Name='SourceNetworkAddress';Expression={$_.Properties[19].Value}}, \`
+            @{Name='LogonType';Expression={$_.Properties[8].Value}}, \`
+            @{Name='Status';Expression={$_.Properties[6].Value}} | Format-Table -AutoSize
+
+        Write-Host "Consider investigating these attempts."
+    } else {
+        Write-Host "OK: No significant failed login activity detected (found $FailedLoginCount attempts)."
+    }
+
+} catch {
+    Write-Error "Error querying the Security Event Log: $($_.Exception.Message)"
+    Write-Host "Please ensure you are running this script with Administrator privileges."
+}
+
+Write-Host "\`n--------------------------------------------------"
+Write-Host "Monitoring Complete."
+Write-Host "--------------------------------------------------"`,
+      readme: `# Failed Login Attempt Monitor Script - PowerShell Version
+
+PowerShell script that monitors the Windows Security Event Log for failed login attempts (Event ID 4625) and alerts when threshold is exceeded.
+
+## Purpose
+This script provides monitoring of Windows Security Event Log to detect patterns of failed login attempts by analyzing Event ID 4625 (An account failed to log on), which could indicate brute force attacks or unauthorized access attempts.
+
+## Compatibility
+- Windows 10, Windows 11
+- Windows Server 2016, 2019, 2022
+- Requires PowerShell 5.1 or later
+
+## Prerequisites
+- Administrator privileges to read the Security Event Log
+- PowerShell execution policy allowing script execution
+
+## Usage
+1. Save as Failed-Login-Monitor.ps1
+2. Open PowerShell as Administrator
+3. Run with parameters: .\\Failed-Login-Monitor.ps1 -TimeWindowMinutes 15 -FailedAttemptThreshold 5
+
+## Parameters
+- TimeWindowMinutes: Check for attempts in the last X minutes (default: 15)
+- FailedAttemptThreshold: Alert if more than X attempts (default: 5)
+
+## Features
+- Queries Windows Security Event Log for Event ID 4625
+- Configurable time windows and alert thresholds
+- Detailed output including usernames, workstation names, and source IP addresses
+- Displays logon type and failure status codes
+
+## Output
+Shows detailed information about failed login attempts including:
+- Target username
+- Workstation name
+- Source network address
+- Logon type
+- Failure status code`,
+      author: "David Povis",
+      version: "1.0.0",
+      compatibleOS: "Windows 10, Windows 11, Windows Server 2016+",
+      requiredModules: "None (uses built-in cmdlets)",
+      dependencies: "PowerShell 5.1+, Administrator privileges required",
+      license: "MIT",
+    },
+    tags: ["Security", "Windows", "Event Log", "Monitoring", "Failed Logins"],
+    highlights: ["Event Log Analysis", "Configurable Parameters", "Detailed Reporting"],
+    version: {
+      version: "1.0.0",
+      changes: "Initial release with Windows Event Log monitoring for failed logins",
+    }
   }
 ];

@@ -484,7 +484,7 @@ done < <(sudo grep "$SEARCH_PATTERN" "$LOG_FILE" 2>/dev/null || true)
 echo -e "\\n--- Results for the last $TIME_WINDOW_MINUTES minutes ---"
 if [ "$failed_attempts" -ge "$FAILED_ATTEMPT_THRESHOLD" ]; then
     echo "ALERT: $failed_attempts failed login attempts detected!"
-    if [ ${#offending_ips[@]} -gt 0 ]; then
+    if (offending_ips.length > 0) {
         echo "Potential source IPs: $(printf '%s ' "${offending_ips[@]}")"
     fi
     echo "Consider checking the log file for details."

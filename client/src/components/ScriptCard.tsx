@@ -80,8 +80,8 @@ export function ScriptCard({ script }: ScriptCardProps) {
             href={`/scripts/${script.key}`}
             className={`inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm ${
               isWindows 
-                ? "bg-primary-600 hover:bg-primary-700 focus:ring-primary-500 text-primary-50 dark:text-white" 
-                : "bg-secondary-600 hover:bg-secondary-700 focus:ring-secondary-500 text-secondary-50 dark:text-white"
+                ? "bg-primary-600 hover:bg-primary-700 focus:ring-primary-500 text-black dark:text-slate-100" 
+                : "bg-secondary-600 hover:bg-secondary-700 focus:ring-secondary-500 text-black dark:text-slate-100"
             } focus:outline-none focus:ring-2 focus:ring-offset-2`}
           >
             View Script

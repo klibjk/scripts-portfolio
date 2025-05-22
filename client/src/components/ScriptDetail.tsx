@@ -72,7 +72,7 @@ export function ScriptDetail({ script }: ScriptDetailProps) {
           </button>
           <button 
             onClick={copyCode}
-            className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-primary-50 dark:text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+            className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-black dark:text-slate-100 bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
           >
             <FaCopy className="mr-2" />
             Copy Code

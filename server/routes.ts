@@ -220,6 +220,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Handle batched logs
+  app.post("/api/logs", async (req, res) => {
+    try {
+      const { logs } = req.body;
+      if (Array.isArray(logs)) {
+        for (const log of logs) {
+          await logAgentAction(log.action, log.details);
+        }
+      } else {
+        await logAgentAction(req.body.action, req.body.details);
+      }
+      res.status(200).json({ success: true });
+    } catch (error) {
+      console.error("Error logging actions:", error);
+      res.status(500).json({ message: "Failed to log actions" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

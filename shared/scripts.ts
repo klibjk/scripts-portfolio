@@ -12,7 +12,7 @@ export const seedScripts: {
       key: "SH-01",
       language: "Bash",
       title: "System-Health-Check.sh",
-      summary: "Gathers essential system information and health metrics for quick diagnostics.",
+      summary: "Gathers essential system information and health metrics for quick diagnostics on Linux/macOS.",
       code: `#!/bin/bash
 
 # Script to gather basic system information and health metrics
@@ -146,6 +146,148 @@ Swap:         2.0Gi          0B       2.0Gi
     version: {
       version: "1.0.0",
       changes: "Initial release with cross-platform support for Linux and macOS",
+    }
+  },
+  {
+    script: {
+      key: "PS-01",
+      language: "PowerShell",
+      title: "System-Health-Check.ps1",
+      summary: "PowerShell script to gather system information and health metrics for Windows diagnostics.",
+      code: `# Script to gather basic system information and health metrics
+
+Write-Host "--------------------------------------------------"
+Write-Host "System Health Check - $(Get-Date)"
+Write-Host "--------------------------------------------------"
+
+# --- OS Information ---
+Write-Host "\`n--- Operating System ---"
+Get-ComputerInfo | Select-Object WindowsProductName, WindowsVersion, OsArchitecture
+
+# --- Hostname & Uptime ---
+Write-Host "\`n--- Hostname & Uptime ---"
+Write-Host "Hostname: $env:COMPUTERNAME"
+$Uptime = (Get-Date) - (Get-CimInstance Win32_OperatingSystem).LastBootUpTime
+Write-Host "Uptime: $($Uptime.Days) days, $($Uptime.Hours) hours, $($Uptime.Minutes) minutes"
+
+# --- CPU Usage ---
+Write-Host "\`n--- CPU Usage (Top 5 processes) ---"
+Get-Process | Sort-Object CPU -Descending | Select-Object -First 5 | Format-Table Name, CPU, Id -AutoSize
+
+# --- Memory Usage ---
+Write-Host "\`n--- Memory Usage ---"
+$Memory = Get-CimInstance Win32_OperatingSystem
+$TotalMemory = [math]::Round($Memory.TotalVisibleMemorySize / 1MB, 2)
+$FreeMemory = [math]::Round($Memory.FreePhysicalMemory / 1MB, 2)
+$UsedMemory = $TotalMemory - $FreeMemory
+$PercentFree = [math]::Round(($FreeMemory / $TotalMemory) * 100, 2)
+Write-Host "Total Memory: $($TotalMemory) GB"
+Write-Host "Used Memory: $($UsedMemory) GB"
+Write-Host "Free Memory: $($FreeMemory) GB ($($PercentFree)%)"
+
+# --- Disk Usage ---
+Write-Host "\`n--- Disk Usage (C: Drive) ---"
+Get-PSDrive C | Select-Object Name, @{Name="Size (GB)";Expression={[math]::Round($_.Used / 1GB,2)}}, @{Name="FreeSpace (GB)";Expression={[math]::Round($_.Free / 1GB,2)}}, @{Name="PercentFree";Expression={[math]::Round(($_.Free / ($_.Used + $_.Free)) * 100,2)}} | Format-Table -AutoSize
+
+# --- Network Information ---
+Write-Host "\`n--- Network Configuration (Primary Interface) ---"
+Get-NetAdapter -Physical | Where-Object {$_.Status -eq "Up"} | Get-NetIPConfiguration | Select-Object InterfaceAlias, IPv4Address, IPv4DefaultGateway, DNSServer | Format-Table -AutoSize
+
+# --- Check for recent system errors (Event Log - System, last 5 errors) ---
+Write-Host "\`n--- Recent System Errors (Last 5 from System Event Log) ---"
+Get-WinEvent -LogName System -MaxEvents 50 | Where-Object {$_.LevelDisplayName -eq "Error"} | Select-Object -First 5 TimeCreated, ID, Message | Format-Table -AutoSize
+
+
+Write-Host "\`n--------------------------------------------------"
+Write-Host "Health Check Complete."
+Write-Host "--------------------------------------------------"`,
+      readme: `# Documentation: System Information & Health Check Script
+
+This script is designed to provide a quick overview of a system's current status, gathering essential hardware and software information along with basic health metrics. It's a foundational tool for IT professionals and system administrators to perform initial assessments or routine checks on endpoints.
+
+## System Information & Health Check - PowerShell Version
+
+### Purpose:
+This PowerShell script gathers key system information and performs basic health checks on Windows systems. It is designed to provide a quick snapshot of the machine's configuration and current operational status, useful for troubleshooting, inventory, and routine monitoring.
+
+### Operating System Compatibility:
+- Windows 10, Windows 11
+- Windows Server 2016 and newer
+
+### Prerequisites:
+- PowerShell 5.1 or higher (comes pre-installed on Windows 10 and newer)
+- Administrative privileges for certain metrics (Event Log access, detailed system information)
+
+### Usage:
+1. Save the script to a file (e.g., System-Health-Check.ps1).
+2. Run the script in a PowerShell console:
+   - Regular execution: .\System-Health-Check.ps1
+   - For full access to all system information: Run PowerShell as Administrator, then execute the script
+
+### Output:
+The script outputs formatted information to the console, including:
+
+- Operating System details (Windows version and architecture)
+- Hostname and system uptime
+- Top 5 CPU-consuming processes
+- Memory usage statistics (total, used, free)
+- Disk usage for the C: drive
+- Network configuration for connected adapters
+- Recent system errors from the Windows Event Log
+
+### Example Snippet of Output (will vary by system):
+
+\`\`\`
+--------------------------------------------------
+System Health Check - 05/22/2025 14:10:22
+--------------------------------------------------
+
+--- Operating System ---
+WindowsProductName       WindowsVersion OsArchitecture
+------------------       -------------- --------------
+Windows 10 Pro           21H2           64-bit        
+
+--- Hostname & Uptime ---
+Hostname: WORKSTATION-PC
+Uptime: 5 days, 8 hours, 42 minutes
+
+--- CPU Usage (Top 5 processes) ---
+Name                        CPU    Id
+----                        ---    --
+Chrome                     243.12  4572
+Teams                      147.85  2680
+Code                        80.33  1520
+Outlook                     42.76  3450
+Explorer                    12.55  1640
+
+--- Memory Usage ---
+Total Memory: 15.94 GB
+Used Memory: 8.56 GB
+Free Memory: 7.38 GB (46.3%)
+
+--- Disk Usage (C: Drive) ---
+Name Size (GB) FreeSpace (GB) PercentFree
+---- --------- -------------- -----------
+C       465.76         128.35       27.56
+\`\`\`
+
+### Notes:
+- Some commands might require administrative privileges to show complete information
+- The script is non-invasive and only collects information without making any system changes
+- This script provides a baseline; it can be extended to gather more specific information (e.g., specific application versions, services, detailed hardware inventory)
+- For continuous monitoring, this script could be scheduled as a task to run periodically`,
+      author: "David Povis",
+      version: "1.0.0",
+      compatibleOS: "Windows 10, Windows 11, Windows Server 2016+",
+      requiredModules: "None (uses built-in cmdlets)",
+      dependencies: "PowerShell 5.1+",
+      license: "MIT",
+    },
+    tags: ["Windows", "PowerShell", "System Health", "Monitoring", "Diagnostics"],
+    highlights: ["Comprehensive Output", "Windows Event Log", "WMI/CIM Integration"],
+    version: {
+      version: "1.0.0",
+      changes: "Initial release with support for Windows systems",
     }
   }
 ];

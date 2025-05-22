@@ -648,35 +648,46 @@ fi
 echo -e "\\n--------------------------------------------------"
 echo "Monitoring Complete."
 echo "--------------------------------------------------"`,
-      readme: `# Failed Login Attempt Monitor Script
+      readme: `# Simple Log Watcher & Alerter Script - Bash Version
 
-Simple log watcher that monitors SSH authentication logs for failed login attempts and alerts when threshold is exceeded.
+This Bash script provides a basic mechanism to monitor Linux authentication logs for a configurable number of "Failed password" attempts within a recent time window. It's a simplified example for identifying potential brute-force attacks or unauthorized access attempts.
 
 ## Purpose
-This script provides basic monitoring of SSH authentication logs to detect patterns of failed login attempts, which could indicate brute force attacks or unauthorized access attempts.
+This script demonstrates a basic approach to monitoring log files for specific patterns, such as repeated failed login attempts, which can be an indicator of a security event.
 
-## Compatibility
-- Linux (Debian/Ubuntu, RHEL/CentOS/Fedora)
-- Requires sudo access for reading authentication logs
+## Operating System Compatibility
+- Linux (Debian/Ubuntu, RHEL/CentOS/Fedora, and other distributions that use /var/log/auth.log or /var/log/secure for SSH login attempts)
+- Less effective on macOS for this specific log file; macOS uses a different logging system (log show) for detailed SSHD events
 
-## Usage
-1. Save as failed_login_monitor.sh
-2. Make executable: chmod +x failed_login_monitor.sh
-3. Run with sudo: sudo ./failed_login_monitor.sh
+## Prerequisites
+- Standard Unix/Linux command-line utilities (grep, date, awk, sudo)
+- sudo access is required to read authentication logs, which are typically restricted
+- The date command's ability to parse relative times (e.g., "5 minutes ago") is used. GNU date (common on Linux) and BSD date (common on macOS) have different syntaxes, and the script attempts to accommodate both
 
 ## Configuration
-- TIME_WINDOW_MINUTES: Check for attempts in the last X minutes (default: 5)
-- FAILED_ATTEMPT_THRESHOLD: Alert if more than X attempts (default: 3)
-- Automatically detects log file location (/var/log/auth.log or /var/log/secure)
+- LOG_FILE: Automatically detected (auth.log or secure)
+- SEARCH_PATTERN: The text pattern to search for (default: "Failed password for")
+- TIME_WINDOW_MINUTES: How far back to check in the logs (default: 5 minutes)
+- FAILED_ATTEMPT_THRESHOLD: Number of matches to trigger an alert (default: 3)
 
-## Features
-- Automatic log file detection
-- Time-based filtering for recent attempts
-- IP address extraction from failed attempts
-- Configurable thresholds and time windows
+## Usage
+1. Save the script to a file (e.g., log_watcher_ssh.sh)
+2. Make the script executable: chmod +x log_watcher_ssh.sh
+3. Run the script with sudo: sudo ./log_watcher_ssh.sh
 
-## Note
-This is a basic example for demonstration. For production environments, consider using dedicated tools like fail2ban or centralized logging solutions.`,
+## Output
+The script outputs:
+- Its configuration (log file, threshold, time window)
+- A summary of findings for the specified time window
+- If the threshold is met or exceeded, it prints an "ALERT" message, including the count of failed attempts and any extracted IP addresses
+- If the threshold is not met, it prints a "No significant failed login activity detected" message
+
+## Notes
+- This is a simple log watcher and not a replacement for robust intrusion detection systems like fail2ban or centralized logging solutions
+- Timestamp parsing from logs can be fragile; this script uses a basic approach
+- IP address extraction is based on a common pattern and might not capture IPs in all log message formats
+- For production use, consider actions beyond printing to console, such as sending email alerts or integrating with a ticketing system
+- For macOS, a different approach using log show would be more accurate for SSHD logs`,
       author: "David Povis",
       version: "1.0.0",
       compatibleOS: "Linux (Debian/Ubuntu, RHEL/CentOS/Fedora)",
@@ -763,44 +774,48 @@ try {
 Write-Host "\`n--------------------------------------------------"
 Write-Host "Monitoring Complete."
 Write-Host "--------------------------------------------------"`,
-      readme: `# Failed Login Attempt Monitor Script - PowerShell Version
+      readme: `# Simple Log Watcher & Alerter Script - PowerShell Version
 
-PowerShell script that monitors the Windows Security Event Log for failed login attempts (Event ID 4625) and alerts when threshold is exceeded.
+This PowerShell script monitors the Windows Security Event Log for multiple failed login attempts (Event ID 4625) within a specified time window. It aims to provide an early warning for potential brute-force attacks or unauthorized access attempts against Windows systems.
 
 ## Purpose
-This script provides monitoring of Windows Security Event Log to detect patterns of failed login attempts by analyzing Event ID 4625 (An account failed to log on), which could indicate brute force attacks or unauthorized access attempts.
+This script demonstrates a basic approach to monitoring log files for specific patterns, such as repeated failed login attempts, which can be an indicator of a security event.
 
-## Compatibility
+## Operating System Compatibility
 - Windows 10, Windows 11
 - Windows Server 2016, 2019, 2022
-- Requires PowerShell 5.1 or later
+- (Requires PowerShell 5.1 or later)
 
 ## Prerequisites
-- Administrator privileges to read the Security Event Log
-- PowerShell execution policy allowing script execution
+- PowerShell 5.1 or higher
+- Administrator privileges are required to read the Security Event Log
+- Ensure "Audit Logon Events" (specifically "Audit Account Logon Events" and "Audit Logon") policies are enabled in Windows to generate Event ID 4625. Success and Failure should be audited for "Audit Logon"
+
+## Configuration (parameters when running the script)
+- TimeWindowMinutes: How far back to check in the event log (default: 15 minutes)
+- FailedAttemptThreshold: Number of Event ID 4625 occurrences to trigger an alert (default: 5)
 
 ## Usage
-1. Save as Failed-Login-Monitor.ps1
-2. Open PowerShell as Administrator
-3. Run with parameters: .\\Failed-Login-Monitor.ps1 -TimeWindowMinutes 15 -FailedAttemptThreshold 5
-
-## Parameters
-- TimeWindowMinutes: Check for attempts in the last X minutes (default: 15)
-- FailedAttemptThreshold: Alert if more than X attempts (default: 5)
-
-## Features
-- Queries Windows Security Event Log for Event ID 4625
-- Configurable time windows and alert thresholds
-- Detailed output including usernames, workstation names, and source IP addresses
-- Displays logon type and failure status codes
+1. Save the script to a file (e.g., Watch-FailedLogins.ps1)
+2. Open PowerShell as an Administrator
+3. Navigate to the directory where you saved the script
+4. Run the script: .\\Watch-FailedLogins.ps1
+5. To use custom parameters: .\\Watch-FailedLogins.ps1 -TimeWindowMinutes 10 -FailedAttemptThreshold 3
+6. If script execution is disabled, you may need to adjust the execution policy
 
 ## Output
-Shows detailed information about failed login attempts including:
-- Target username
-- Workstation name
-- Source network address
-- Logon type
-- Failure status code`,
+The script outputs:
+- Its configuration parameters
+- A status message indicating it's querying events
+- If the number of detected failed logins meets or exceeds the threshold, it displays an "ALERT" message along with details of the first 10 detected failed attempts (Time, Target User, Workstation, Source IP, Logon Type, Status Code)
+- If the threshold is not met, it indicates that no significant failed login activity was detected
+- Error messages if it cannot query the Security Event Log (e.g., due to lack of permissions)
+
+## Notes
+- This script focuses specifically on Event ID 4625 ("An account failed to log on"). Other event IDs might also be relevant for comprehensive security monitoring
+- The effectiveness depends on proper audit policies being configured on the Windows system
+- For real-time alerting or integration with other systems (e.g., SIEM, ticketing), the script would need to be extended
+- This script provides a reactive alert; proactive measures like strong password policies, account lockout policies, and multi-factor authentication are crucial`,
       author: "David Povis",
       version: "1.0.0",
       compatibleOS: "Windows 10, Windows 11, Windows Server 2016+",

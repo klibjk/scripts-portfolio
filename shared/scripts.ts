@@ -370,28 +370,42 @@ fi
 echo -e "\\n--------------------------------------------------"
 echo "Security Baseline Check Complete. Review findings."
 echo "--------------------------------------------------"`,
-      readme: `# Security Baseline Checker Script
+      readme: `# Security Baseline Checker Script - Bash Version
 
-Checks basic security configurations on Linux/macOS systems for compliance with security best practices.
+This script aims to verify common security configurations on a system, helping to ensure it adheres to basic security best practices. It's intended to identify potential misconfigurations that could increase a system's attack surface.
 
 ## Purpose
-Performs checks for several common security baseline settings to help administrators identify potential security configuration issues.
+This Bash script performs checks for several common security baseline settings on Linux and macOS systems. It's designed to help administrators quickly identify potential deviations from recommended security configurations.
 
-## Compatibility
-- Linux (Debian/Ubuntu, RHEL/CentOS)
+## Operating System Compatibility
+- Linux (tested on Debian/Ubuntu-based and RHEL/CentOS-based systems)
 - macOS
 
-## Usage
-1. Save as security_baseline_check.sh
-2. Make executable: chmod +x security_baseline_check.sh
-3. Run with sudo: sudo ./security_baseline_check.sh
+## Prerequisites
+- Standard Unix/Linux command-line utilities (e.g., ufw, pfctl, ss, nc, sudo, find, spctl, fdesetup)
+- sudo access is required for some checks (e.g., firewall status, reading sudoers configuration)
+- ss (socket statistics) is preferred for network checks on Linux; nc (netcat) is used as a fallback or for macOS
 
-## Checks Performed
+## Usage
+1. Save the script to a file (e.g., security_baseline_check.sh)
+2. Make the script executable: chmod +x security_baseline_check.sh
+3. Run the script, preferably with sudo for comprehensive checks: sudo ./security_baseline_check.sh
+
+## Output
+The script outputs its findings to the console, indicating whether certain security settings are in place or if potential issues are detected:
 - Firewall status (UFW on Linux, pf on macOS)
 - SSH port listening status
-- Passwordless sudo configurations
-- macOS Gatekeeper status
-- macOS FileVault encryption status`,
+- Presence of passwordless sudo configurations
+- (macOS only) Gatekeeper status
+- (macOS only) FileVault (full disk encryption) status
+
+The output uses "OK:" for checks that pass or confirm a secure setting and "WARNING:" for warnings or potential issues.
+
+## Notes
+- This script performs basic checks and is not a substitute for a comprehensive security audit or dedicated security scanning tools
+- "Passwordless sudo check" is a simplified check; complex sudoers configurations might require more detailed analysis
+- The world-writable files check in /tmp is commented out by default as it can be noisy and context-dependent
+- Security best practices evolve; this script should be reviewed and updated periodically`,
       author: "David Povis",
       version: "1.0.0",
       compatibleOS: "Linux (All distributions), macOS",
@@ -510,26 +524,42 @@ Write-Host "Security Baseline Check Complete. Review findings."
 Write-Host "--------------------------------------------------"`,
       readme: `# Security Baseline Checker Script - PowerShell Version
 
-PowerShell script to verify Windows security configurations and compliance with security best practices.
+This PowerShell script checks several common security baseline settings on Windows systems. It helps administrators and MSPs verify that essential security configurations are in place, aligning with industry best practices to reduce system vulnerabilities.
 
 ## Purpose
-Checks several common security baseline settings on Windows systems to verify essential security configurations are in place.
+This PowerShell script checks several common security baseline settings on Windows systems. It helps administrators and MSPs verify that essential security configurations are in place, aligning with industry best practices to reduce system vulnerabilities.
 
-## Compatibility
+## Operating System Compatibility
 - Windows 10, Windows 11
 - Windows Server 2016, 2019, 2022
+- (Requires PowerShell 5.1 or later)
+
+## Prerequisites
+- PowerShell 5.1 or higher
+- Administrator privileges are generally required to accurately query all security settings (e.g., UAC, BitLocker, Antivirus status via WMI)
 
 ## Usage
-1. Save as Security-BaselineCheck.ps1
-2. Open PowerShell as Administrator
-3. Run: .\\Security-BaselineCheck.ps1
+1. Save the script to a file (e.g., Security-BaselineCheck.ps1)
+2. Open PowerShell as an Administrator
+3. Navigate to the directory where you saved the script
+4. Run the script: .\\Security-BaselineCheck.ps1
+5. If script execution is disabled, you may need to adjust the execution policy (e.g., Set-ExecutionPolicy RemoteSigned -Scope Process for the current session)
 
-## Checks Performed
-- Windows Firewall status for all profiles
-- User Account Control (UAC) status
-- Automatic Updates configuration
-- Antivirus product status via WMI
-- BitLocker Drive Encryption status`,
+## Output
+The script outputs its findings to the PowerShell console, indicating the status of various security settings:
+- Windows Firewall status for Domain, Private, and Public profiles
+- User Account Control (UAC) enabled status
+- Automatic Updates configuration status
+- Antivirus product status (via WMI SecurityCenter2)
+- BitLocker Drive Encryption status for the OS drive
+
+The output uses "OK:" for checks that confirm a generally secure setting and "WARNING:" for warnings or configurations that may require review.
+
+## Notes
+- This script provides a snapshot of common security settings. It is not exhaustive and should be part of a broader security assessment strategy
+- Antivirus status detection relies on WMI's SecurityCenter2 namespace, which should be available and accurate on most modern Windows systems with a compatible AV product
+- BitLocker status check requires the BitLocker cmdlets to be available
+- Configuration for items like "Automatic Updates" can be complex (e.g., Group Policy controlled); this script provides a high-level check`,
       author: "David Povis",
       version: "1.0.0",
       compatibleOS: "Windows 10, Windows 11, Windows Server 2016+",

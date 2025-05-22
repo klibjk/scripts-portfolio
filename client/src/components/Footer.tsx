@@ -13,7 +13,7 @@ export function Footer() {
           </div>
           <div className="mt-4 sm:mt-0">
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              &copy; {currentYear} Systems Engineering Team. All rights reserved.
+              &copy; {currentYear} David Povis. All rights reserved.
             </p>
           </div>
         </div>

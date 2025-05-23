@@ -1,5 +1,7 @@
 # Script Portfolio - David Povis
 
+**TEST: Verifying direct Git push functionality**
+
 A comprehensive collection of system administration and automation scripts showcasing cross-platform expertise for Linux/macOS and Windows environments.
 
 ## Overview

@@ -21,8 +21,13 @@ Your complete Script Portfolio is ready! Here's everything that's been prepared 
 ### Step 1: Create GitHub Repository
 1. Go to [GitHub.com](https://github.com) → Sign in
 2. Click "+" → "New repository"
+<<<<<<< HEAD
 3. Name: `scripts-portfolio`
 4. Description: `Professional Scripts Portfolio - System Administration & Automation`
+=======
+3. Name: `script-portfolio`
+4. Description: `Professional Script Portfolio - System Administration & Automation`
+>>>>>>> 248955d (Showcase system administration and automation scripts on GitHub)
 5. Make it **Public** (to showcase your skills)
 6. **Don't initialize** with README (we have one!)
 7. Click "Create repository"

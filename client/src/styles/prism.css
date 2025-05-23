@@ -1,0 +1,93 @@
+/* Additional styling for Prism code blocks */
+pre[class*="language-"] {
+  margin: 0;
+  overflow: auto;
+  padding: 1rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  background: #1e1e1e;
+  border-radius: 0.375rem;
+}
+
+code[class*="language-"] {
+  font-family: 'JetBrains Mono', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  font-size: 0.875rem;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  tab-size: 4;
+  hyphens: none;
+}
+
+/* Custom scrollbar for code blocks */
+.code-container {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.code-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.code-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.code-container::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.dark .code-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dark .code-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* PowerShell-specific highlighting */
+.language-powershell .token.function {
+  color: #569CD6;
+}
+
+.language-powershell .token.parameter {
+  color: #9CDCFE;
+}
+
+.language-powershell .token.variable {
+  color: #9CDCFE;
+}
+
+.language-powershell .token.comment {
+  color: #6A9955;
+}
+
+.language-powershell .token.string {
+  color: #CE9178;
+}
+
+/* Bash-specific highlighting */
+.language-bash .token.function {
+  color: #569CD6;
+}
+
+.language-bash .token.keyword {
+  color: #C586C0;
+}
+
+.language-bash .token.string {
+  color: #CE9178;
+}
+
+.language-bash .token.comment {
+  color: #6A9955;
+}
+
+.language-bash .token.variable {
+  color: #9CDCFE;
+}

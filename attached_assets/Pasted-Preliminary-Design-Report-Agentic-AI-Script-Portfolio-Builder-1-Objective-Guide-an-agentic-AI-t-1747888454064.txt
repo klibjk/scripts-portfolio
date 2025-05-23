@@ -1,0 +1,210 @@
+Preliminary Design Report – Agentic AI Script‑Portfolio Builder
+
+1. Objective
+
+Guide an agentic AI to build a public web portfolio that showcases PowerShell (Windows) and Bash (Linux) scripting skills relevant to the NinjaOne “Systems Engineer – Product Scripting” role. The portfolio must:
+
+Present production‑ready automation scripts with metadata, code view, and README‑style usage notes.
+
+Demonstrate a feature‑based vertical slicing architecture (front‑end, back‑end, database, tests) for each functional module.
+
+Support rapid addition of new scripts and script categories.
+
+Maintain a log file tracking all actions the agentic AI performs during project creation and modification.
+
+2. High‑Level Requirements
+
+Req ID
+
+Requirement
+
+R1
+
+Use a modern frontend framework with utility-first CSS for all UI rendering.
+
+R2
+
+Build a back‑end API using a Node-compatible framework.
+
+R3
+
+Persist data in a PostgreSQL database.
+
+R4
+
+CI/CD pipeline (GitHub Actions) with linting, tests, and automated deployment using Vercel.
+
+R5
+
+Initial seed data includes ≥ 4 exemplar scripts (2 PowerShell, 2 Bash).
+
+R6
+
+RESTful endpoints for all CRUD operations on scripts.
+
+R7
+
+Static markdown rendering for script documentation while storing raw .ps1/.sh blobs in the database.
+
+R8
+
+Dark/light mode toggle and responsive layout.
+
+R9
+
+Maintain a persistent internal log file of all build actions taken by the agentic AI.
+
+3. Vertical Slice Directory Template
+
+/project-root
+  /features
+    /script-gallery       ← list + filter view
+      /frontend           (page templates, UI components, hooks)
+      /backend            (route handlers, service logic, tests)
+      /data               (data definitions, seed entries)
+    /script-detail        ← code viewer & metadata rendering
+    /admin-dashboard      ← auth-gated CRUD UI for script management
+  /shared                 ← configuration, design tokens, utility logic
+  /infrastructure         ← deployment setup, CI/CD workflows, logging scripts
+  /logs                   ← agent action logs
+
+4. Data Model
+
+Script
+- id: unique identifier
+- language: either "PowerShell" or "Bash"
+- title: script name/title
+- summary: short description of the script purpose
+- code: raw script content
+- readme: markdown content explaining usage
+- tags: list of relevant keywords
+- createdAt: timestamp when the script was added
+- updatedAt: timestamp when the script was last modified
+
+5. Initial Seed Scripts
+
+Key
+
+Script
+
+OS
+
+Problem Solved
+
+Highlights
+
+PS‑01
+
+Win‑SecBaseline.ps1
+
+Windows
+
+Hardens local security baselines (lockout policy, firewall rules, TLS settings).
+
+Uses CIM/WMI, idempotent, outputs JSON report.
+
+PS‑02
+
+Win‑UpdateReset.ps1
+
+Windows
+
+Resets Windows Update components & forces remediation cycle.
+
+Stops services, cleans SoftwareDistribution, restarts, logs via Event Log.
+
+SH‑01
+
+Linux‑DiskMonitor.sh
+
+Linux
+
+Monitors disk usage & mails IT when threshold > 85%.
+
+POSIX‑compliant, works under cron, supports argument overrides.
+
+SH‑02
+
+Linux‑BaselineAudit.sh
+
+Linux
+
+Generates CIS‑style audit of SSH, firewall, users/groups.
+
+Leverages /etc parsing, outputs CSV & JSON, exit codes for RMM.
+
+Implementation Note: Place these files in the relevant feature directory to seed initial content and structure.
+
+6. Backlog – Future Script Ideas
+
+Cross‑OS Patch Compliance Report – Aggregates wmic qfe (Windows) and dnf/yum history (Linux) into a unified JSON feed.
+
+Endpoint Inventory Collector – PowerShell core script calling Dell/HP REST BIOS APIs; Bash variant using dmidecode.
+
+Credential Rotation – Automates local admin password rotation, storing hashes in HashiCorp Vault via API.
+
+Ransomware Canary – Drops and validates canary files, raising alert on change.
+
+Intune / Jamf Interaction – Example of REST integration for policy push (Windows & Mac, stretch goal if time).
+
+Zero‑Day Hotfix Dispatcher – AI‑assisted script that queries CISA KEV feed daily and schedules patch tasks.
+
+7. Implementation Phases
+
+Phase
+
+Deliverables
+
+0
+
+Repo bootstrap (directory skeleton, formatting, commit policy).
+
+1
+
+Database schema + seed scripts.
+
+2
+
+Back-end API for scripts: create, read, update, delete.
+
+3
+
+Frontend pages: script list & script detail viewer.
+
+4
+
+Admin dashboard for script management with auth.
+
+5
+
+CI/CD integration and automated deploy to Vercel.
+
+6
+
+Add backlog scripts and improve test coverage.
+
+8. Acceptance Criteria
+
+All R1–R9 satisfied.
+
+End‑to‑end test confirms a visitor can browse gallery, open a script, and read documentation.
+
+Automated deploy succeeds on push to main.
+
+Agent action log is complete and accessible in the /logs directory.
+
+README at repo root documents architecture, usage, contributing, and feature slicing rationale.
+
+Next Action for Agentic AI
+
+Generate project directory based on §3.
+
+Implement schema, seed scripts, and CRUD routes.
+
+Build gallery and detail pages.
+
+Enable GitHub Actions workflow and deploy to Vercel.
+
+Begin logging all actions to /logs/agent-activity.log.
+
+Select and implement 2 scripts from backlog in §6.

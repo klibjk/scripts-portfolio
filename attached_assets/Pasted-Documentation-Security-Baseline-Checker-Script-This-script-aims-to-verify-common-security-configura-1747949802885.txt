@@ -1,0 +1,116 @@
+Documentation: Security Baseline Checker Script
+This script aims to verify common security configurations on a system, helping to ensure it adheres to basic security best practices. It's intended to identify potential misconfigurations that could increase a system's attack surface.
+
+1. Security Baseline Checker - Bash Version
+Purpose:
+This Bash script performs checks for several common security baseline settings on Linux and macOS systems. It's designed to help administrators quickly identify potential deviations from recommended security configurations.
+
+Operating System Compatibility:
+
+Linux (tested on Debian/Ubuntu-based and RHEL/CentOS-based systems)
+macOS
+Prerequisites:
+
+Standard Unix/Linux command-line utilities (e.g., ufw, pfctl, ss, nc, sudo, find, spctl, fdesetup).
+sudo access is required for some checks (e.g., firewall status, reading sudoers configuration). The script will attempt to use sudo for these specific commands.
+ss (socket statistics) is preferred for network checks on Linux; nc (netcat) is used as a fallback or for macOS.
+Usage:
+
+Save the script to a file (e.g., security_baseline_check.sh).
+Make the script executable: chmod +x security_baseline_check.sh
+Run the script, preferably with sudo for comprehensive checks: sudo ./security_baseline_check.sh
+Output:
+The script outputs its findings to the console, indicating whether certain security settings are in place or if potential issues are detected:
+
+Firewall status (UFW on Linux, pf on macOS).
+SSH port listening status.
+Presence of passwordless sudo configurations.
+(macOS only) Gatekeeper status.
+(macOS only) FileVault (full disk encryption) status.
+The output uses "✅" for checks that pass or confirm a secure setting and "⚠️" for warnings or potential issues.
+Example Snippet of Output (will vary by system):
+
+--------------------------------------------------
+Security Baseline Check - Thu May 22 13:58:20 EDT 2025
+--------------------------------------------------
+
+--- Firewall (UFW) Status ---
+✅ UFW is active.
+
+--- SSH Port Status ---
+✅ SSH daemon appears to be listening on port 22.
+
+--- Passwordless Sudo Check ---
+✅ No users found with global passwordless sudo for ALL commands (basic check).
+
+--- macOS Gatekeeper Status --- (if on macOS)
+✅ Gatekeeper is enabled.
+
+--- macOS FileVault Status --- (if on macOS)
+⚠️ FileVault is Off. Consider enabling for full disk encryption.
+...
+Notes:
+
+This script performs basic checks and is not a substitute for a comprehensive security audit or dedicated security scanning tools.
+"Passwordless sudo check" is a simplified check; complex sudoers configurations might require more detailed analysis.
+The world-writable files check in /tmp is commented out by default as it can be noisy and context-dependent.
+Security best practices evolve; this script should be reviewed and updated periodically.
+2. Security Baseline Checker - PowerShell Version
+Purpose:
+This PowerShell script checks several common security baseline settings on Windows systems. It helps administrators and MSPs verify that essential security configurations are in place, aligning with industry best practices to reduce system vulnerabilities.
+
+Operating System Compatibility:
+
+Windows 10, Windows 11
+Windows Server 2016, 2019, 2022
+(Requires PowerShell 5.1 or later)
+Prerequisites:
+
+PowerShell 5.1 or higher.
+Administrator privileges are generally required to accurately query all security settings (e.g., UAC, BitLocker, Antivirus status via WMI).
+Usage:
+
+Save the script to a file (e.g., Security-BaselineCheck.ps1).
+Open PowerShell as an Administrator.
+Navigate to the directory where you saved the script.
+Run the script: .\Security-BaselineCheck.ps1
+If script execution is disabled, you may need to adjust the execution policy (e.g., Set-ExecutionPolicy RemoteSigned -Scope Process for the current session).
+Output:
+The script outputs its findings to the PowerShell console, indicating the status of various security settings:
+
+Windows Firewall status for Domain, Private, and Public profiles.
+User Account Control (UAC) enabled status.
+Automatic Updates configuration status.
+Antivirus product status (via WMI SecurityCenter2).
+BitLocker Drive Encryption status for the OS drive.
+The output uses "✅" for checks that confirm a generally secure setting and "⚠️" for warnings or configurations that may require review.
+Example Snippet of Output (will vary by system):
+
+--------------------------------------------------
+Security Baseline Check - 05/22/2025 13:58:20
+--------------------------------------------------
+
+--- Windows Firewall Status ---
+✅ Domain Firewall Profile is Enabled.
+✅ Private Firewall Profile is Enabled.
+✅ Public Firewall Profile is Enabled.
+
+--- User Account Control (UAC) Status ---
+✅ User Account Control (UAC) is Enabled.
+
+--- Automatic Updates Status ---
+✅ Automatic Updates appear to be configured to download and/or install.
+
+--- Antivirus Status ---
+Product: Windows Defender
+Status: ✅ Enabled and Up to Date.
+
+--- BitLocker Status (OS Drive) ---
+✅ BitLocker is ON for the OS Drive (C:). Status: FullyEncrypted
+...
+Notes:
+
+This script provides a snapshot of common security settings. It is not exhaustive and should be part of a broader security assessment strategy.
+Antivirus status detection relies on WMI's SecurityCenter2 namespace, which should be available and accurate on most modern Windows systems with a compatible AV product.
+BitLocker status check requires the BitLocker cmdlets to be available.
+Configuration for items like "Automatic Updates" can be complex (e.g., Group Policy controlled); this script provides a high-level check.

@@ -1,0 +1,60 @@
+Documentation: System Information & Health Check Script
+This script is designed to provide a quick overview of a system's current status, gathering essential hardware and software information along with basic health metrics. It's a foundational tool for IT professionals and Managed Service Providers (MSPs) to perform initial assessments or routine checks on endpoints.
+
+1. System Information & Health Check - Bash Version
+Purpose:
+This Bash script gathers key system information and performs basic health checks on Linux and macOS systems. It is designed to provide a quick snapshot of the machine's configuration and current operational status, useful for troubleshooting, inventory, and routine monitoring.
+
+Operating System Compatibility:
+
+Linux (tested on Debian/Ubuntu-based systems, RHEL/CentOS-based systems)
+macOS
+Prerequisites:
+
+Standard Unix/Linux command-line utilities (e.g., uname, hostname, uptime, ps, free, df, ip, ss, dmesg, sw_vers, vm_stat, ifconfig, route, perl). Most are pre-installed on target systems.
+perl is used for a specific memory calculation on macOS; if not available, that specific metric might not display.
+Usage:
+
+Save the script to a file (e.g., system_health_check.sh).
+Make the script executable: chmod +x system_health_check.sh
+Run the script: ./system_health_check.sh
+Some commands for specific information (like dmesg for recent errors on Linux) might produce more detailed output if run with sudo ./system_health_check.sh, but the script is generally designed to run as a standard user.
+Output:
+The script outputs formatted information to the console, including:
+
+Operating System details (name, version)
+Hostname and system uptime
+Top 5 CPU-consuming processes
+Memory usage (total, used, free)
+Disk usage for the root filesystem
+Network configuration for the primary interface
+(Linux only) Recent system errors from dmesg (if any)
+Example Snippet of Output (will vary by system):
+
+--------------------------------------------------
+System Health Check - Thu May 22 13:58:20 EDT 2025
+--------------------------------------------------
+
+--- Operating System ---
+PRETTY_NAME="Ubuntu 22.04.3 LTS"
+
+--- Hostname & Uptime ---
+my-linux-server
+ 13:58:20 up 10 days,  2:17,  1 user,  load average: 0.05, 0.15, 0.10
+
+--- CPU Usage (Top 5 processes) ---
+%CPU   PID USER     COMMAND
+ 0.5  1234 myuser   /usr/bin/some_process -arg
+ 0.2   876 root     /usr/sbin/another_daemon
+...
+
+--- Memory Usage ---
+              total        used        free      shared  buff/cache   available
+Mem:          7.7Gi       1.2Gi       5.8Gi        12Mi       800Mi       6.3Gi
+Swap:         2.0Gi          0B       2.0Gi
+...
+Notes:
+
+The accuracy and availability of some metrics (like specific memory stats on macOS or network interface detection) can vary slightly between OS versions and configurations.
+This script provides a baseline; it can be extended to gather more specific information (e.g., specific application versions, running services, detailed hardware inventory).
+For continuous monitoring, this script could be scheduled as a cron job, with output redirected to a file or a monitoring system.
